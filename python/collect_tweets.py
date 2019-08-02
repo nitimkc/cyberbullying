@@ -3,12 +3,14 @@ from pymongo import MongoClient
 import json
 import twitter as tw 
 from pprint import pprint
+import pandas as pd
+#import twitter_credentials
 
-import twitter_credentials
-
-auth = tw.OAuthHandler(twitter_credentials.consumerkey, twitter_credentials.consumersecret)
-auth.set_access_token(twitter_credentials.accesstoken, twitter_credentials.accesssecret)
-twitter_api = tw.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+auth = tw.oauth.OAuth("256116632-DPKz8nJF3yH2898idMhvtMSI7f1fSvGkuKYvsaD5",
+"u26R9cFOCrglTg2dxLOXxJG059jf0jjCEem5AroH0HU3r",
+"IIag1JQPRgYCN1bgBYbSytErS",
+"cMpYi152iEl4LoQqFBB8gx9lDmTzENKXqKh2c0sHkmRrwztabX")
+twitter_api = tw.Twitter(auth=auth)
 
 '''
 connect mongodb database
@@ -24,7 +26,7 @@ define query in REST API
  
 count = 100
  
-q = "bullied OR bully OR bullyed lang:en"
+q = "bullied OR bully OR bullying OR cyberbullied OR cyberbully OR cyberbullying -trump lang:en"
   
 '''
 fetch data
@@ -38,14 +40,14 @@ statuses = search_results["statuses"]
 
 since_id_new = statuses[-1]['id']
 
-for statuse in statuses:
+# for status in statuses:
 
-    try:
-        tweet_collection.insert(statuse)
-#         pprint(statuse['created_at'])
+#     try:
+# #        tweet_collection.insert(status)
+#         pprint(status['created_at'])
   
-    except:
-        pass
+#     except:
+#         pass
 
 '''
 continue fetching previous data with the same query
@@ -60,11 +62,11 @@ while(since_id_new != since_id_old):
 
     since_id_new = statuses[-1]['id']
 
-    for statuse in statuses:
+    for status in statuses:
                 
         try:
-            tweet_collection.insert(statuse)
-#             pprint(statuse['created_at'])
+#            tweet_collection.insert(status)
+            pprint(status['created_at'])
         except:
             pass
 #         

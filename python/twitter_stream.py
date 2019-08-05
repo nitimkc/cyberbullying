@@ -2,7 +2,7 @@ import tweepy as tw
 import json
 
 from pymongo import MongoClient
-mongo_host = 'mongodb://localhost:27017/'
+mongo_host = 'mongodb://localhost:27017/twitterdb'
 
 import twitter_credentials
 consumer_key = twitter_credentials.consumerkey
@@ -11,9 +11,9 @@ access_token = twitter_credentials.accesstoken
 access_secret= twitter_credentials.accesssecret
 
 
-query = ['bullied','bully','bullying','cyberbullied','cyberbully','cyberbullying' 'language:en']
+query = ['bullied', 'bully','bullying', 'cyberbullied','cyberbully','cyberbullying', 'cyber bullied','cyber bully','cyber bullying']#, '-trump '] 
 lang = ['en']
-
+ 
 class StreamListener(tw.StreamListener):    
     # access the Twitter Streaming API 
 
@@ -24,7 +24,8 @@ class StreamListener(tw.StreamListener):
     def on_error(self, status_code):
         # On error - if an error occurs, display the error / status code
         print('An Error has occured: ' + repr(status_code))
-        return False
+        return True
+        print ("Stream Restarted")
  
     def on_data(self, data):
         # connect to your mongoDB and stores the tweet

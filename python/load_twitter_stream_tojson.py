@@ -10,8 +10,10 @@ access_secret= twitter_credentials.accesssecret
 auth = tw.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_secret)
 
-query = ['bullied', 'bully','bullying', 'cyberbullied','cyberbully','cyberbullying']#, '-trump '] 
+query = ['bullied', 'bully','bullying', 'cyberbullied','cyberbully','cyberbullying -filter:retweets']#, '-trump '] 
 lang = ['en']
+
+reqd_fields = [u'_id', u'created_at',	u'id',	u'text',	u'truncated',	u'geo',	u'coordinates',	u'place',	u'lang',	u'timestamp_ms',	u'extended_tweet',	u'extended_entities',	u'possibly_sensitive',	u'in_reply_to_status_id', u'metadata' ]
 
 class StreamListener(tw.StreamListener):    
     # access the Twitter Streaming API 
@@ -24,10 +26,9 @@ class StreamListener(tw.StreamListener):
         # On error - if an error occurs, display the error / status code
         print('An Error has occured: ' + repr(status_code))
         return True
-        print("Stream Restarted")
+        print('Stream Restarted')
  
     def on_data(self, data):
-        # connect to your mongoDB and stores the tweet
         try:
     
             # Decode the JSON from Twitter
@@ -36,15 +37,13 @@ class StreamListener(tw.StreamListener):
             # exclude retweets
             if not datajson['text'].startswith('RT'):
 
-                #print(datajson['text'].encode('ascii', 'ignore'))
                 # grab the 'created_at' data from the Tweet to use for display
                 created_at = datajson['created_at']
-                #print("Tweet collected at " + str(created_at))
-                #print(str(datajson['created_at']))
-                #print(str(datajson['extended_tweet']))
-
-                with open('tweets.json', 'a') as tf:
-                    tf.write( json.dump(str(datajson), tf) )
+                print("Tweet collected at " + str(created_at))
+                
+                # save remaining tweets
+                with open('tweets.json', 'a') as f:
+                    json.dump(datajson, f)
 
             return True 
 

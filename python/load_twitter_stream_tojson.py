@@ -13,7 +13,6 @@ auth.set_access_token(access_token, access_secret)
 query = ['bullied', 'bully','bullying', 'cyberbullied','cyberbully','cyberbullying']#, '-trump '] 
 lang = ['en']
 
-tweets = open('today.txt','a')
 
 class StreamListener(tw.StreamListener):    
     # access the Twitter Streaming API 
@@ -44,6 +43,7 @@ class StreamListener(tw.StreamListener):
                 print("Tweet collected at " + str(created_at))
                 
                 # save remaining tweets
+                tweets = open('today.txt','a')
                 tweets.write(str(datajson))
 
             return True 

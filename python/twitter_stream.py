@@ -11,7 +11,7 @@ access_token = twitter_credentials.accesstoken
 access_secret= twitter_credentials.accesssecret
 
 
-query = ['bullied', 'bully','bullying', 'cyberbullied','cyberbully','cyberbullying', 'cyber bullied','cyber bully','cyber bullying']#, '-trump '] 
+query = ['bullied', 'bully','bullying', 'cyberbullied','cyberbully','cyberbullying']#, '-trump '] 
 lang = ['en']
  
 class StreamListener(tw.StreamListener):    
@@ -40,7 +40,7 @@ class StreamListener(tw.StreamListener):
             # exclude retweets
             if not datajson['text'].startswith('RT'):
 
-                print(datajson['text'].encode('ascii', 'ignore'))
+                #print(datajson['text'].encode('ascii', 'ignore'))
 
                 # grab the 'created_at' data from the Tweet to use for display
                 created_at = datajson['created_at']

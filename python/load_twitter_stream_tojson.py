@@ -13,8 +13,6 @@ auth.set_access_token(access_token, access_secret)
 query = ['bullied', 'bully','bullying', 'cyberbullied','cyberbully','cyberbullying']#, '-trump '] 
 lang = ['en']
 
-reqd_fields = [u'_id', u'created_at',	u'id',	u'text',	u'truncated',	u'geo',	u'coordinates',	u'place',	u'lang',	u'timestamp_ms',	u'extended_tweet',	u'extended_entities',	u'possibly_sensitive',	u'in_reply_to_status_id', u'metadata' ]
-
 tweets = open('today.txt','a')
 
 class StreamListener(tw.StreamListener):    

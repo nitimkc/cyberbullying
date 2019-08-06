@@ -15,9 +15,11 @@ lang = ['en']
 
 reqd_fields = [u'_id', u'created_at',	u'id',	u'text',	u'truncated',	u'geo',	u'coordinates',	u'place',	u'lang',	u'timestamp_ms',	u'extended_tweet',	u'extended_entities',	u'possibly_sensitive',	u'in_reply_to_status_id', u'metadata' ]
 
+tweets = open('today.txt','a')
+
 class StreamListener(tw.StreamListener):    
     # access the Twitter Streaming API 
-
+    
     def on_connect(self):
         # Called initially to connect to the Streaming API
         print("You are now connected to the streaming API.")
@@ -37,13 +39,14 @@ class StreamListener(tw.StreamListener):
             # exclude retweets
             if not datajson['text'].startswith('RT'):
 
+                print(datajson['text'].encode('ascii', 'ignore'))
+
                 # grab the 'created_at' data from the Tweet to use for display
                 created_at = datajson['created_at']
                 print("Tweet collected at " + str(created_at))
                 
                 # save remaining tweets
-                with open('tweets.json', 'a') as f:
-                    json.dump(datajson, f)
+                tweets.write(str(datajson))
 
             return True 
 

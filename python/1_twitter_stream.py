@@ -25,7 +25,7 @@ class StreamListener(tw.StreamListener):
         # On error - if an error occurs, display the error / status code
         print('An Error has occured: ' + repr(status_code))
         return True
-        print ("Stream Restarted")
+        print("Stream Restarted")
  
     def on_data(self, data):
         # connect to your mongoDB and stores the tweet

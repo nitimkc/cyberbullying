@@ -36,15 +36,17 @@ class StreamListener(tw.StreamListener):
             # exclude retweets
             if not datajson['text'].startswith('RT'):
 
-                print(datajson['text'].encode('ascii', 'ignore'))
+                #print(datajson['text'].encode('ascii', 'ignore'))
 
                 # grab the 'created_at' data from the Tweet to use for display
                 created_at = datajson['created_at']
                 print("Tweet collected at " + str(created_at))
                 
                 # save remaining tweets
-                outfile = open('today.json','w+')
-                json.dump(datajson, outfile)
+                tweets= open('today.txt', 'a')
+                tweets.write(str(datajson))
+                #outfile = open('today.json','w+')
+                #json.dump(datajson, outfile)
 
             return True 
 

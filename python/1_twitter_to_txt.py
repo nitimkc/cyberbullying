@@ -1,6 +1,5 @@
 import tweepy as tw
 import json
-from datetime import date
 from urllib3.exceptions import ProtocolError
 
 import twitter_credentials
@@ -9,14 +8,12 @@ consumer_secret = twitter_credentials.consumersecret
 access_token = twitter_credentials.accesstoken
 access_secret= twitter_credentials.accesssecret
 
-
 auth = tw.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_secret)
 
-query = ['bullied', 'bully','bullying', 'cyberbullied','cyberbully','cyberbullying', '-filter:retweets']#, '-trump '] 
+query = ['bullied', 'bully','bullying', 'cyberbullied','cyberbully','cyberbullying']#, '-trump '] 
 lang = ['en']
 
-filename = 'tweets_' + str(date.today()) + '.json'
 
 class StreamListener(tw.StreamListener):    
     # access the Twitter Streaming API 
@@ -33,16 +30,29 @@ class StreamListener(tw.StreamListener):
  
     def on_data(self, data):
         try:
-            with open(filename, 'a') as f:
-                f.write(data)
-                print("Tweet collected at " + str(json.loads(data)['created_at']))
-                return True
+    
+            # Decode the JSON from Twitter
+            datajson = json.loads(data)
+            
+            # exclude retweets
+            if not datajson['text'].startswith('RT'):
 
-        except BaseException as e:
-            print("Error on_data: %s" % str(e))
-        return True
+                #print(datajson['text'].encode('ascii', 'ignore'))
 
+                # grab the 'created_at' data from the Tweet to use for display
+                created_at = datajson['created_at']
+                print("Tweet collected at " + str(created_at))
+                
+                # save remaining tweets
+                tweets= open('today.txt', 'a')
+                tweets.write(str(datajson))
+                #outfile = open('today.json','w+')
+                #json.dump(datajson, outfile)
 
+            return True 
+
+        except Exception as e:
+           print(e)
 
 
 while True:

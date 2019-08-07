@@ -43,8 +43,8 @@ class StreamListener(tw.StreamListener):
                 print("Tweet collected at " + str(created_at))
                 
                 # save remaining tweets
-                tweets = open('today.txt','a')
-                tweets.write(str(datajson))
+                outfile = open('today.json','w+')
+                json.dump(datajson, outfile)
 
             return True 
 

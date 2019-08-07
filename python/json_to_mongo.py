@@ -7,8 +7,12 @@ mongo_host = 'mongodb://localhost:27017/twitterdb'
 client = MongoClient(mongo_host)
 db = client.tweets
 
-with open('tweets.json', 'r') as f:
-    tweets_dict = json.load(f)
+import json    
 
-db.tweets_collection.insert(tweets_dict)
+data = []
+with open('tweets.json', encoding='utf-8') as f:
+    for line in f:
+        data.append(json.loads(line))
+
+data 
 

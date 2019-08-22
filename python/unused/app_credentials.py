@@ -1,0 +1,2 @@
+consumerkey="ls7FWxvADsdITgsSWNNosMFbL"
+consumersecret="9vRYCpWfx8GSbHQpOaH3n1DSd9OGfpKyAFbMN2zJyiDIInbmH6"

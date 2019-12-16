@@ -18,7 +18,7 @@ log = logging.getLogger("readability.readability")
 log.setLevel('WARNING')
 
 ROOT = 'C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\'
-CORPUS = os.path.join(ROOT, 'data\\labelled_tweets')
+CORPUS = os.path.join(ROOT, 'data\\filtered')
 RESULTS = os.path.join(ROOT, 'results')
 DOC_PATTERN = r'.*\.json' 
 file = CORPUS+'\\random_tweets_2b.json'

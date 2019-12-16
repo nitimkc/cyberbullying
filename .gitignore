@@ -1,6 +1,8 @@
 application/cache
 python/today.txt
 python/twitter_credentials.py
+python/unused/
+python/twitter_credentials_fullarchive.py
 data/
 results/
 *.pptx

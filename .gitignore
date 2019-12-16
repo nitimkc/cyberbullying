@@ -3,6 +3,7 @@ python/today.txt
 python/twitter_credentials.py
 python/unused/
 python/twitter_credentials_fullarchive.py
+python/__pycache__
 data/
 results/
 *.pptx

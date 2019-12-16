@@ -1,6 +1,8 @@
 application/cache
 python/today.txt
+python/twitter_credentials.py
 data/
 results/
 *.pptx
 contracts/
+

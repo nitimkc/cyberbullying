@@ -1,26 +1,24 @@
-import pandas as pd
-import json
-import os
+#path_infile = 'C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\data\\filtered\\tweets_2019-09-01.json'
+PATH = 'C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\data\\filtered\\'
+output_dir = 'send_for_label'
 
-PATH = '/Users/peaceforlives/Documents/Projects/cyberbullying/data/'
-path = r'/Users/peaceforlives/Documents/Projects/cyberbullying/data/'
-infile = 'filtered/'
-outfile = 'send_for_label/'
-filename = 'tweets.json'
+def sendforlabel_tweets(path_infile, output_dir):
 
-def sendforlabel_tweets(PATH, infile, outfile, filename):
+    # PATH
+    PATH_data = Path(path_infile)
     
     # load and select reqd columns
-    data = pd.read_json(PATH + infile + filename, lines=True)
+    data = pd.read_json(PATH_data, lines=True)
     data_forlabel = data[['id', 'full_tweet']]
-    data_forlabel['no_hashtags'] = 
+    
+    #data_forlabel['no_hashtags'] = 
     #print(data_forlabel.head())
 
-    data_forlabel.to_csv(path + outfile + filename.rsplit('.',1)[0] + '.csv', index=False, encoding = 'utf-8-sig', )
+    # output
+    path_outfile = Path.joinpath(PATH_data.parents[1], output_dir,  (PATH_data.stem + '.csv') )
+    data_forlabel.to_csv(path_outfile, index=False, encoding = 'utf-8-sig')
 
 for file in os.listdir(PATH + infile):
     print(file)
     sendforlabel_tweets(PATH=PATH, infile=infile, outfile=outfile, filename=file)
-    
-
 

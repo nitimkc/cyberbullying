@@ -2,7 +2,7 @@ from reader import TweetsCorpusReader#, PickledCorpusReader
 
 # from sklearn.pipeline import Pipeline
 # from sklearn.feature_extraction.text import CountVectorizer
-# from transformers import TextNormalizer_lemmatize
+from transformers import TextNormalizer_lemmatize
 # from sklearn.decomposition import LatentDirichletAllocation, TruncatedSVD, NMF
 
 import nltk
@@ -41,8 +41,8 @@ if __name__ == '__main__':
     # # x = processed_tokens[7066]
     # # " ".join([token for (token, tag) in x ])
 
-    # normalize = TextNormalizer_lemmatize()
-    # normalized_tweets = list(normalize.fit_transform(processed_tokens))       # this processed removes some of the words based on lemmatization, punctuation and stopwords
+    normalize = TextNormalizer_lemmatize()
+    normalized_tweets = list(normalize.fit_transform(processed_tokens))       # this processed removes some of the words based on lemmatization, punctuation and stopwords
     # print(normalized_tweets[7066])                                            # this did not get rid of special characters  
 
     # docs = [' '.join(doc) for doc in normalized_tweets]

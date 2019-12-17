@@ -85,7 +85,8 @@ class TweetsCorpusReader(CorpusReader):
             new_tweets = [tweet for tweet in tweets if str(tweet['bullying_trace']) not in remove]
         
         return new_tweets
-    
+        # return tweets 
+           
     def sizes(self, fileids=None):
         """
         Returns a list of tuples, the fileid and size on disk of the file.

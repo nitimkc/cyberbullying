@@ -38,12 +38,12 @@ def create_pipeline(estimator, reduction=False):
         # ('vectorize', TfidfVectorizer(
         #     tokenizer=identity, preprocessor=None, lowercase=False
         # ))
-        # ('ngram', CountVectorizer(
-        #     ngram_range=(1, 4), analyzer='char', lowercase=False
-        # ))
-        ('vectorize', TfidfVectorizer(
-            tokenizer=identity, preprocessor=None, lowercase=False, ngram_range=(2,2)
-        ))        
+        ('ngram', CountVectorizer(
+            ngram_range=(1, 4), analyzer='char', lowercase=False
+        ))
+        # ('vectorize', TfidfVectorizer(
+        #     tokenizer=identity, preprocessor=None, lowercase=False, ngram_range=(2,2)
+        # ))        
     ]
 
     if reduction:

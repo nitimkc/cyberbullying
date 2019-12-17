@@ -3,10 +3,11 @@ python/today.txt
 python/twitter_credentials.py
 python/unused/
 python/twitter_credentials_fullarchive.py
-python/test.py
-python/tweets_analysis_final.py
-python/tweets_analysis.py
+scripts/test.py
+scripts/tweets_analysis_final.py
+scripts/tweets_analysis.py
 python/__pycache__
+scripts/__pychache__
 data/
 *.pptx
 contracts/

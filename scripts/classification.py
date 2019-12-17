@@ -1,6 +1,6 @@
 # 1. read corpus
 # 2. create loader object (iterable of train and test sets)
-# 3. run classification models in cv model and
+# 3. run classification models in cv mode and
 #    store cv scores in json file
 
 from reader import TweetsCorpusReader

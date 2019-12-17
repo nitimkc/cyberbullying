@@ -1,6 +1,6 @@
-# 1. function to create pipeline for each classification model 
-#    and stores into model object 
-# 2. function to store model scores
+# 1. create pipeline of normalizer and vectorizer
+# 2. apply pipeline to each classification model 
+# 3. function to store model scores
 
 import nltk
 import unicodedata
@@ -34,13 +34,10 @@ def create_pipeline(estimator, reduction=False):
 
     steps = [
         ('normalize', TextNormalizer_lemmatize()),
-        # ('vectorize', TfidfVectorizer(
-        #     tokenizer=identity, preprocessor=None, lowercase=False
-        # ))
-        # ('ngram', CountVectorizer(
+        # ('vectorize', CountVectorizer(
         #     ngram_range=(1, 4), analyzer='char', lowercase=False
         # ))
-        ('vectorize', TfidfVectorizer(
+        ('ngram_vect', TfidfVectorizer(
             tokenizer=identity, preprocessor=None, lowercase=False, ngram_range=(1,2)
         ))        
     ]

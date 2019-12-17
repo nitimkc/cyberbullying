@@ -7,7 +7,7 @@ scripts/test.py
 scripts/tweets_analysis_final.py
 scripts/tweets_analysis.py
 python/__pycache__
-scripts/__pychache__
+scripts/__pycache__
 data/
 *.pptx
 contracts/

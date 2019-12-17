@@ -1,8 +1,12 @@
+# 1. read corpus
+# 2. create loader object (iterable of train and test sets)
+# 3. run classification models in cv model and
+#    store cv scores in json file
+
 from reader import TweetsCorpusReader
 from loader import CorpusLoader
 from build import models
 from build import score_models
-from sklearn.pipeline import Pipeline
 
 import nltk
 import os

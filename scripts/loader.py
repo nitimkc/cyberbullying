@@ -1,5 +1,6 @@
-import numpy as np
+# create iterable of train and test sets for CV
 
+import numpy as np
 from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split as tts
 

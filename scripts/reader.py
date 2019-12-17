@@ -13,7 +13,7 @@ from nltk.corpus.reader.util import StreamBackedCorpusView, concat, ZipFilePathP
 from nltk.corpus.reader.api import CorpusReader
 
 DOC_PATTERN = r'.*\.json' 
-PKL_PATTERN = r'.*\.pickle'
+# PKL_PATTERN = r'.*\.pickle'
 
 ##########################################################################
 ## Tweets Corpus Reader

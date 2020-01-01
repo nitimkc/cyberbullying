@@ -2,6 +2,8 @@ import pandas as pd
 import os
 import json
 
+# remove retweets for file in test folder and export result to no_retweets
+
 PATH = '/Users/peaceforlives/Documents/Projects/cyberbullying/data/'
 infile = 'test/'
 outfile='no_retweets/'

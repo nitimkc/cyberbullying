@@ -2,16 +2,13 @@ import pandas as pd
 import os
 import json
 
-#PATH = '/Users/peaceforlives/Documents/Projects/cyberbullying/data/'
+PATH = '/Users/peaceforlives/Documents/Projects/cyberbullying/data/'
 infile = 'raw/'
-#outfile ='no_retweets/'
+outfile ='no_retweets/'
 
-#files = os.listdir(PATH + infile)
-['tweets_2019-08-11.json', 'tweets_2019-08-16.json', 'tweets_2019-08-17.json']
-infile = 'raw/'
-filename = files[13]
-filename
-#def remove_tweets(PATH, infile, outfile, filename):
+# only applicable for the files mentioned heres
+files = ['tweets_2019-08-19.json', 'tweets_2019-08-20.json', 'tweets_2019-08-21.json']
+filename = files[0]
 
 data = pd.read_json(PATH + infile + filename, orient='records', lines=True)
 print(data.head())

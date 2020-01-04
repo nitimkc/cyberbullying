@@ -10,19 +10,30 @@ import json
 import os
 from pathlib import Path
 
-ROOT = 'C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\'
+ROOT = '/Users/peaceforlives/Documents/Projects/cyberbullying/'
+# ROOT = 'C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\'
 
-JSON_CORPUS = Path(os.path.join(ROOT, 'data\\labelled_tweets'))
-ORIGINAL_CORPUS = Path(os.path.join(ROOT, 'data\\send_for_label'))
-LABELLED_B_CORPUS = Path(os.path.join(ROOT, 'data\\labelled_b'))
+JSON_CORPUS = Path(os.path.join(ROOT, 'data/labelled_tweets'))
+ORIGINAL_CORPUS = Path(os.path.join(ROOT, 'data/random'))
+LABELLED_CORPUS = Path(os.path.join(ROOT, 'data/labelled_b'))
+# JSON_CORPUS = Path(os.path.join(ROOT, 'data\\labelled_tweets'))
+# ORIGINAL_CORPUS = Path(os.path.join(ROOT, 'data\\send_for_label'))
+# LABELLED_CORPUS = Path(os.path.join(ROOT, 'data\\labelled_a'))
 
 original_files = list(ORIGINAL_CORPUS.iterdir())
-labelled_files = list(LABELLED_B_CORPUS.iterdir())
+labelled_files = list(LABELLED_CORPUS.iterdir())
+files = [i.stem for i in labelled_files]
 
-for i, j in zip(original_files,labelled_files):
-    original = pd.read_csv(i, usecols=[0,1], index_col=None, encoding='utf-8-sig')
-    labelled = pd.read_excel(j, index_col=None, encoding='utf-8-sig')
+for i in files:
+    print(i)
+    original = pd.read_csv(Path(os.path.join(ORIGINAL_CORPUS, i+'.csv')), usecols=[0,1], index_col=None, encoding='utf-8-sig')
+    labelled = pd.read_excel(Path(os.path.join(LABELLED_CORPUS, i+'.xlsx')), index_col=None, encoding='utf-8-sig')
 
+    # original = pd.read_csv(Path(os.path.join(ORIGINAL_CORPUS, i+'.csv')), usecols=[0,1], index_col=None, encoding='utf-8-sig')
+    # labelled = pd.read_excel(Path(os.path.join(LABELLED_CORPUS, i+'.xlsx')), usecols=[0,2,3,4,5], index_col=None, encoding='utf-8-sig')
+    # merged_df = original.merge(labelled, how = 'inner', on = ['id'])
+    # have to do this manually because the id does not match between csv and xlsx files
+    
     original['bullying_trace'] = labelled['bullying_trace']
     original['bullying_role'] = labelled['bullying_role']
     original['form_of_bullying'] = labelled['form_of_bullying']

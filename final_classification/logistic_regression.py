@@ -3,6 +3,8 @@
 # 3. 
 
 from reader import TweetsCorpusReader
+import numpy as np
+import pickle
 import nltk
 import os
 import json
@@ -12,14 +14,16 @@ import re
 log = logging.getLogger("readability.readability")
 log.setLevel('WARNING')
 
-# ROOT = 'C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\'
-# CORPUS = os.path.join(ROOT, 'data\\test')
-# RESULTS = os.path.join(ROOT, 'results')
+#windows
+ROOT = 'C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\'
+CORPUS = os.path.join(ROOT, 'data\\labelled_tweets')
+RESULTS = os.path.join(ROOT, 'results')
 # file = CORPUS+'\\random_tweets_2b.json'
 
-ROOT = '/Users/peaceforlives/Documents/Projects/cyberbullying/'
-CORPUS = os.path.join(ROOT, 'data/labelled_tweets')
-RESULTS = os.path.join(ROOT, 'results')
+#mac
+# ROOT = '/Users/peaceforlives/Documents/Projects/cyberbullying/'
+# CORPUS = os.path.join(ROOT, 'data/labelled_tweets')
+# RESULTS = os.path.join(ROOT, 'results')
 
 DOC_PATTERN = r'.*\.json' 
 file = CORPUS+'/tweets.json'
@@ -33,8 +37,7 @@ if __name__ == "__main__":
         from reader import TweetsCorpusReader
         from transformers import TextNormalizer_lemmatize, GensimVectorizer
 
-        corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN)        
-        # new_corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace = 'yes')
+        corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace = 'bullying_trace')        
         processed_tweets = corpus.process_tweet()
 
         normalize  = TextNormalizer_lemmatize()
@@ -42,8 +45,13 @@ if __name__ == "__main__":
         # X = [' '.join(doc) for doc in normalized_tweets]
         y = list(corpus.fields('bullying_trace'))
         
-        from build_evaluate import build_and_evaluate
-        model = build_and_evaluate(X, y, outpath=PATH)
+        # perform classification with increasing training set size
+        # idx = (np.linspace(.1, 1.0, 5)*4915).astype(int)
+        # for i in idx: 
+        #     print('# of trainset: ', len(X[:i]))
+        #     print('# of testset: ', len(y[:i]))
+        from build_evaluate import build_and_evaluate   
+        model = build_and_evaluate(X[:i], y[:i], outpath=PATH)
 
     else:
         with open(PATH, 'rb') as f:

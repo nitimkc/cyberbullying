@@ -63,7 +63,8 @@ multiclass_models.append(create_pipeline(LogisticRegression(solver='newton-cg',m
 multiclass_models.append(create_pipeline(SVC(kernel='linear'), False))
 multiclass_models.append(create_pipeline(KNeighborsClassifier(n_neighbors = 8), False))
 
-def score_models(models, loader):
+def score_models(models, loader, idx):
+
     for model in models:
 
         name = model.named_steps['classifier'].__class__.__name__
@@ -81,15 +82,18 @@ def score_models(models, loader):
         }
 
         for X_train, X_test, y_train, y_test in loader:
+            if idx == None:
+                idx = len(X_train)
+            
             start = time.time()
-            model.fit(X_train, y_train)
-            y_pred = model.predict(X_test)
+            model.fit(X_train[:idx], y_train[:idx])
+            y_pred = model.predict(X_test[:idx])
 
             scores['time'].append(time.time() - start)
-            scores['accuracy'].append(accuracy_score(y_test, y_pred))
-            scores['precision'].append(precision_score(y_test, y_pred, average='weighted'))
-            scores['recall'].append(recall_score(y_test, y_pred, average='weighted'))
-            scores['f1'].append(f1_score(y_test, y_pred, average='weighted'))
+            scores['accuracy'].append(accuracy_score(y_test[:idx], y_pred))
+            scores['precision'].append(precision_score(y_test[:idx], y_pred, average='weighted'))
+            scores['recall'].append(recall_score(y_test[:idx], y_pred, average='weighted'))
+            scores['f1'].append(f1_score(y_test[:idx], y_pred, average='weighted'))
             print('model: ', scores['name'])
             print('accuracy: ', scores['accuracy'])
             print('precision: ',scores['precision'])

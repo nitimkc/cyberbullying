@@ -36,7 +36,7 @@ class TweetsCorpusReader(CorpusReader):
 
     CorpusView = StreamBackedCorpusView  # The corpus view class used by this reader.
 
-    def __init__(self, root, fileids=None, word_tokenizer=TweetTokenizer(), encoding='utf-8-sig', bullying_trace=None):
+    def __init__(self, root, fileids=None, word_tokenizer=TweetTokenizer(), encoding='utf-8-sig', bullying_trace='bullying_trace'):
 
         CorpusReader.__init__(self, root, fileids, encoding, bullying_trace)
 

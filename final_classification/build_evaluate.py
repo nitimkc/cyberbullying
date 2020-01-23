@@ -16,7 +16,6 @@ from nltk import pos_tag
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import LabelEncoder
 from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
 from sklearn.base import BaseEstimator, TransformerMixin
 
 from sklearn.metrics import classification_report as clsr

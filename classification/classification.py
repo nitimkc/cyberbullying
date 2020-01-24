@@ -40,9 +40,9 @@ DOC_PATTERN = r'.*\.json'
 target = 'bullying_trace'
 if __name__ == '__main__':
     corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace=target)
-    loader = CorpusLoader(corpus, 12, label=target)
+    loader = CorpusLoader(corpus, 5, label=target)
     # perform classification with increasing training set size
-    idx = (np.linspace(.1, 1.0, 5)*len(corpus.docs())).astype(int)
+    idx = (np.linspace(.1, 1.0, 25)*len(corpus.docs())).astype(int)
     for i in idx: 
         for scores in score_models(binary_models, loader, idx=i):
             result_filename = '/TRACE_results'+str(i)+'.json'
@@ -57,8 +57,8 @@ if __name__ == '__main__':
 target = 'bullying_role'
 if __name__ == '__main__':
     corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace=target)
-    loader = CorpusLoader(corpus, 12, label=target)
-    idx = (np.linspace(.1, 1.0, 5)*len(corpus.docs())).astype(int)
+    loader = CorpusLoader(corpus, 5, label=target)
+    idx = (np.linspace(.1, 1.0, 25)*len(corpus.docs())).astype(int)
     for i in idx: 
         for scores in score_models(multiclass_models, loader, idx=i):
             result_filename = '/ROLE_results'+str(i)+'.json'
@@ -70,8 +70,8 @@ if __name__ == '__main__':
 target = 'form_of_bullying'
 if __name__ == '__main__':
     corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace=target)
-    loader = CorpusLoader(corpus, 12, label=target)
-    idx = (np.linspace(.1, 1.0, 5)*len(corpus.docs())).astype(int)
+    loader = CorpusLoader(corpus, 5, label=target)
+    idx = (np.linspace(.1, 1.0, 25)*len(corpus.docs())).astype(int)
     for i in idx: 
         for scores in score_models(multiclass_models, loader, idx=i):
             result_filename = '/FORM_results'+str(i)+'.json'
@@ -82,8 +82,8 @@ if __name__ == '__main__':
 target = 'bullying_post_type'
 if __name__ == '__main__':
     corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace=target)
-    loader = CorpusLoader(corpus, 12, label=target)
-    idx = (np.linspace(.1, 1.0, 5)*len(corpus.docs())).astype(int)
+    loader = CorpusLoader(corpus, 5, label=target)
+    idx = (np.linspace(.1, 1.0, 25)*len(corpus.docs())).astype(int)
     for i in idx: 
         for scores in score_models(multiclass_models, loader, idx=i):
             result_filename = '/TYPE_results'+str(i)+'.json'

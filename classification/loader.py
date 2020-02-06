@@ -6,13 +6,13 @@ from sklearn.model_selection import train_test_split as tts
 
 class CorpusLoader(object):
 
-    def __init__(self, reader, folds=12, shuffle=True, label=None, trainsize=None):
+    def __init__(self, reader, folds=12, shuffle=True, label=None, size=None):
         self.reader = reader
         self.folds  = KFold(n_splits=folds, shuffle=shuffle)
         self.files  = np.asarray(list(self.reader.fields('id')))
         self.label = label
-        self.trainsize = trainsize
-        self.idx = range(0, len( self.reader.docs() ))  #np.linspace(.1, 1.0, 25)*len( self.reader.docs() )
+        self.idx = range(0,size)
+
 
     def documents(self, idx=None):
         tweets = self.reader.process_tweet()

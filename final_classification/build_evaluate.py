@@ -40,7 +40,7 @@ def timeit(func):
 def identity(words):
     return words
 
-def build_and_evaluate(X, y, classifier=LogisticRegression, outpath=None, verbose=True):
+def build_and_evaluate(X, y, n, classifier=LogisticRegression, outpath=None, verbose=True):
     """
     Builds a classifer for the given list of documents and targets in two
     stages: the first does a train/test split and prints a classifier report,
@@ -81,16 +81,17 @@ def build_and_evaluate(X, y, classifier=LogisticRegression, outpath=None, verbos
 
     # Begin evaluation
     if verbose: print("Building for evaluation")
-    # X_train, X_test, y_train, y_test = tts(X, y, test_size=0.2)
-    model, secs = build(classifier, X, y)
+
+    X_train, X_test, y_train, y_test = X[:n], X[n:], y[:n], y[n:]
+    model, secs = build(classifier, X_train, y_train)
 
     if verbose: print("Evaluation model fit in {:0.3f} seconds".format(secs))
     if verbose: print("Classification Report:\n")
 
-    y_pred = model.predict(X)
+    y_pred = model.predict(X_test)
     # print(clsr(y_test, y_pred, target_names=labels.classes_))
-    print(clsr(y, y_pred, target_names=labels.classes_))
-    print(cm(y, y_pred, labels=[1,0]))
+    print(clsr(y_test, y_pred, target_names=labels.classes_))
+    print(cm(y_test, y_pred, labels=[1,0]))
 
     if verbose: print("Building complete model and saving ...")
     model, secs = build(classifier, X, y)

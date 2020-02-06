@@ -16,7 +16,8 @@ log.setLevel('WARNING')
 
 #windows
 ROOT = 'C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\'
-CORPUS = os.path.join(ROOT, 'data\\labelled_tweets')
+CORPUS = os.path.join(ROOT, 'data\\labelled_tweets\\a')
+TEST = os.path.join(ROOT, 'data\\labelled_tweets\\test')
 RESULTS = os.path.join(ROOT, 'results')
 # file = CORPUS+'\\random_tweets_2b.json'
 
@@ -25,8 +26,8 @@ RESULTS = os.path.join(ROOT, 'results')
 # CORPUS = os.path.join(ROOT, 'data/labelled_tweets')
 # RESULTS = os.path.join(ROOT, 'results')
 
-DOC_PATTERN = r'.*\.json' 
-file = CORPUS+'/tweets.json'
+DOC_PATTERN = r'.*\.json'  
+# file = CORPUS+'/tweets.json'
 
 
 if __name__ == "__main__":
@@ -39,19 +40,20 @@ if __name__ == "__main__":
 
         corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace = 'bullying_trace')        
         processed_tweets = corpus.process_tweet()
-
         normalize  = TextNormalizer_lemmatize()
-        X = list(normalize.fit_transform(processed_tweets))
-        # X = [' '.join(doc) for doc in normalized_tweets]
-        y = list(corpus.fields('bullying_trace'))
+        X_train = list(normalize.fit_transform(processed_tweets)) # X = [' '.join(doc) for doc in normalized_tweets]
+        y_train = list(corpus.fields('bullying_trace'))
+
+        testcorpus = TweetsCorpusReader(TEST, DOC_PATTERN, bullying_trace = 'bullying_trace')        
+        test_processed_tweets = testcorpus.process_tweet()
+        X_test = list(normalize.fit_transform(test_processed_tweets)) # X = [' '.join(doc) for doc in normalized_tweets]
+        y_test = list(testcorpus.fields('bullying_trace'))
         
-        # perform classification with increasing training set size
-        # idx = (np.linspace(.1, 1.0, 5)*4915).astype(int)
-        # for i in idx: 
-        #     print('# of trainset: ', len(X[:i]))
-        #     print('# of testset: ', len(y[:i]))
         from build_evaluate import build_and_evaluate   
-        model = build_and_evaluate(X[:i], y[:i], outpath=PATH)
+        X = X_train+X_test
+        y = y_train+y_test
+        split_idx = len(X_train)
+        model = build_and_evaluate(X, y, outpath=PATH, n=split_idx)
 
     else:
         with open(PATH, 'rb') as f:

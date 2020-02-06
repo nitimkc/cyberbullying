@@ -63,7 +63,7 @@ multiclass_models.append(create_pipeline(LogisticRegression(solver='newton-cg',m
 multiclass_models.append(create_pipeline(SVC(kernel='linear'), False))
 multiclass_models.append(create_pipeline(KNeighborsClassifier(n_neighbors = 8), False))
 
-def score_models(models, loader, idx):
+def score_models(models, loader):
 
     for model in models:
 
@@ -74,32 +74,36 @@ def score_models(models, loader, idx):
         scores = {
             'model': str(model),
             'name': name,
+            'size': [],
             'accuracy': [],
             'precision': [],
             'recall': [],
-            'f1': [],
+            'f1_valid': [],
+            'f1_train': [],
             'time': [],
         }
 
         for X_train, X_test, y_train, y_test in loader:
-            if idx == None:
-                idx = len(X_train)
             
             start = time.time()
-            model.fit(X_train[:idx], y_train[:idx])
-            y_pred = model.predict(X_test[:idx])
+            model.fit(X_train, y_train)
+            y_pred = model.predict(X_test)
+            y_train_pred = model.predict(X_train)
 
             scores['time'].append(time.time() - start)
-            scores['accuracy'].append(accuracy_score(y_test[:idx], y_pred))
-            scores['precision'].append(precision_score(y_test[:idx], y_pred, average='weighted'))
-            scores['recall'].append(recall_score(y_test[:idx], y_pred, average='weighted'))
-            scores['f1'].append(f1_score(y_test[:idx], y_pred, average='weighted'))
+            scores['size'].append([len(X_train), len(X_test)])
+            scores['accuracy'].append(accuracy_score(y_test, y_pred))
+            scores['precision'].append(precision_score(y_test, y_pred, average='weighted'))
+            scores['recall'].append(recall_score(y_test, y_pred, average='weighted'))
+            scores['f1_valid'].append(f1_score(y_test, y_pred, average='weighted'))
+            scores['f1_train'].append(f1_score(y_train, y_train_pred, average='weighted'))
             print('model: ', scores['name'])
             print('accuracy: ', scores['accuracy'])
-            print('precision: ',scores['precision'])
-            print('recall: ',scores['recall'])
-            print('f1: ',scores['f1'])
-            print('time: ',scores['time'])
+            print('precision: ', scores['precision'])
+            print('recall: ', scores['recall'])
+            print('f1_valid: ', scores['f1_valid'])
+            print('f1_train: ', scores['f1_train'])
+            print('time: ', scores['time'])
 
         yield scores
 

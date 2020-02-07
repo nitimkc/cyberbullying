@@ -10,7 +10,7 @@ import os
 PATH = r'/Users/peaceforlives/Documents/Projects/cyberbullying/data'
 PATH_data = Path(PATH)                 # use your path
 
-n = 5
+n = 8
 
 # import previously selected random tweets 
 in_files = glob.glob(os.path.join(PATH_data, 'random', "*.csv"))
@@ -22,18 +22,19 @@ insample = ( pd.read_csv(f) for f in in_files )
 concat_insample = pd.concat(insample, ignore_index=True)
 concat_insample['id'] = concat_insample['id'].astype(str)
 concat_insample = concat_insample.set_index(concat_insample.id, inplace=False)
-#concat_insample.head()
+# concat_insample.head()
 idx = concat_insample.index
 
 # read and combine all files from send_for_label folder
 # remove tweets with id matching index obtained above
 
 all_files = glob.glob(os.path.join(PATH_data,'send_for_label', "*.csv"))  # advisable to use os.path.join as this makes concatenation OS independent
-df_from_each_file = (pd.read_csv(f) for f in all_files)
+df_from_each_file = (pd.read_csv(f, lineterminator='\n') for f in all_files)
 concatenated_df = pd.concat(df_from_each_file, ignore_index=True)
 concatenated_df['id'] = concatenated_df['id'].astype(str)
 concatenated_df = concatenated_df[-concatenated_df.duplicated(['id'])]
 concatenated_df.shape
+concatenated_df.head()
 nonsample_df = concatenated_df.loc[~concatenated_df['id'].isin(idx)]
 
 # create new random sample from dataset that does not include previously samples tweets

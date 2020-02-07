@@ -40,7 +40,7 @@ def timeit(func):
 def identity(words):
     return words
 
-def build_and_evaluate(X, y, n, classifier=LogisticRegression, outpath=None, verbose=True):
+def build_and_evaluate(X, y, n=None, classifier=LogisticRegression, outpath=None, verbose=True):
     """
     Builds a classifer for the given list of documents and targets in two
     stages: the first does a train/test split and prints a classifier report,
@@ -61,12 +61,12 @@ def build_and_evaluate(X, y, n, classifier=LogisticRegression, outpath=None, ver
         Inner build function that builds a single model.
         """
         if isinstance(classifier, type):
-            classifier = classifier()
+            classifier = classifier(solver='lbfgs', penalty='none')
 
         model = Pipeline([
             # ('preprocessor', TextNormalizer_lemmatize()),
             ('vectorizer', TfidfVectorizer(
-                tokenizer=identity, preprocessor=None, lowercase=False)
+                tokenizer=identity, preprocessor=None, lowercase=False, ngram_range=(1,2))
                 ),
             ('classifier', classifier),
         ])
@@ -80,18 +80,28 @@ def build_and_evaluate(X, y, n, classifier=LogisticRegression, outpath=None, ver
     y = labels.fit_transform(y)
 
     # Begin evaluation
-    if verbose: print("Building for evaluation")
+    if n:
+        if verbose: print("Building for evaluation")
+        X_train, X_test, y_train, y_test = tts(X, y, test_size=n)
+        model, secs = build(classifier, X_train, y_train)
 
-    X_train, X_test, y_train, y_test = X[:n], X[n:], y[:n], y[n:]
-    model, secs = build(classifier, X_train, y_train)
+        if verbose: print("Evaluation model fit in {:0.3f} seconds".format(secs))
+        y_pred = model.predict(X_test)
 
-    if verbose: print("Evaluation model fit in {:0.3f} seconds".format(secs))
-    if verbose: print("Classification Report:\n")
+        if verbose: print("Classification Report:\n")
+        print(clsr(y_test, y_pred, target_names=labels.classes_))
+        print(cm(y_test, y_pred, labels=[1,0]))
 
-    y_pred = model.predict(X_test)
-    # print(clsr(y_test, y_pred, target_names=labels.classes_))
-    print(clsr(y_test, y_pred, target_names=labels.classes_))
-    print(cm(y_test, y_pred, labels=[1,0]))
+    else:
+        if verbose: print("Building for evaluation")    
+        model, secs = build(classifier, X, y)
+
+        if verbose: print("Evaluation model fit in {:0.3f} seconds".format(secs))
+        y_pred = model.predict(X)
+
+        if verbose: print("Classification Report:\n")
+        print(clsr(y, y_pred, target_names=labels.classes_))
+        print(cm(y, y_pred, labels=[1,0]))
 
     if verbose: print("Building complete model and saving ...")
     model, secs = build(classifier, X, y)
@@ -108,7 +118,7 @@ def build_and_evaluate(X, y, n, classifier=LogisticRegression, outpath=None, ver
     return model
 
 
-def show_most_informative_features(model, text=None, n=20):
+def show_most_informative_features(model, text=None, n=10):
     """
     Accepts a Pipeline with a classifer and a TfidfVectorizer and computes
     the n most informative features of the model. If text is given, then will

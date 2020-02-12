@@ -12,6 +12,8 @@ from nltk.tokenize import TweetTokenizer
 from nltk.corpus.reader.util import StreamBackedCorpusView, concat, ZipFilePathPointer
 from nltk.corpus.reader.api import CorpusReader
 
+from geopy.geocoders import Nominatim
+
 DOC_PATTERN = r'.*\.json' 
 # PKL_PATTERN = r'.*\.pickle'
 
@@ -75,22 +77,23 @@ class TweetsCorpusReader(CorpusReader):
                 for (path, enc, fileid) in self.abspaths(fileids, True, True)
             ])
         
-        # if self._bullying_trace=='bullying_trace':
-        #     new_tweets = [tweet for tweet in tweets if str(tweet[self._bullying_trace]) =='yes']
-        if self._bullying_trace=='bullying_role':
-            remove = ['nan','None']
-            new_tweets = [tweet for tweet in tweets if str(tweet[self._bullying_trace]) not in remove]
-        elif self._bullying_trace=='form_of_bullying':
-            new_tweets = [tweet for tweet in tweets if str(tweet[self._bullying_trace]) !='nan']
-        elif self._bullying_trace=='bullying_post_type':
-            new_tweets = [tweet for tweet in tweets if str(tweet[self._bullying_trace]) !='nan']           
-        
-        else:
-            remove = ['nan','remove']
-            new_tweets = [tweet for tweet in tweets if str(tweet[self._bullying_trace]) not in remove]
+        tweets = [tweet for tweet in tweets]
 
-        return new_tweets
-        # return tweets 
+
+
+        if self._bullying_trace=='bullying_trace':
+            remove = ['nan','remove']
+            tweets = [tweet for tweet in tweets if str(tweet[self._bullying_trace]) not in remove]
+        if self._bullying_trace=='bullying_role':
+            tweets = [tweet for tweet in tweets if str(tweet[self._bullying_trace]) !='nan']
+        elif self._bullying_trace=='form_of_bullying':
+            tweets = [tweet for tweet in tweets if str(tweet[self._bullying_trace]) !='nan']
+        elif self._bullying_trace=='bullying_post_type':
+            tweets = [tweet for tweet in tweets if str(tweet[self._bullying_trace]) !='nan']           
+        else:
+            tweets
+
+        return tweets 
            
     def sizes(self, fileids=None):
         """

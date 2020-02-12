@@ -24,7 +24,7 @@ LABELLED_CORPUS = Path(os.path.join(ROOT, 'data\\labelled_a'))
 original_files = list(ORIGINAL_CORPUS.iterdir())
 labelled_files = list(LABELLED_CORPUS.iterdir())
 files = [i.stem for i in labelled_files]
-
+# i=files[1]
 for i in files:
     print(i)
     original = pd.read_csv(Path(os.path.join(ORIGINAL_CORPUS, i+'.csv')), usecols=[0,1], index_col=None, encoding='utf-8-sig')
@@ -41,7 +41,11 @@ for i in files:
     original['bullying_post_type'] = labelled['bullying_post_type'].str.lower()
     
     original.iloc[:,2:] = original.iloc[:,2:].apply(lambda x: x.str.rstrip())
-    
+    post_type = {'accusations': 'accusation', 'self disclosure':'self-disclosure', 
+    'self-disclosures': 'self-disclosure', 'reports': 'report', 
+    'cyberbullying': 'cyberbullying', 'denials': 'denial'}
+    original['bullying_post_type'] = original['bullying_post_type'].replace(post_type)
+
     data_json = original.to_dict(orient='records')
     # result = [json.dumps(record) for record in data_json]
 

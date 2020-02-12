@@ -21,7 +21,7 @@ log.setLevel('WARNING')
 
 #windows
 ROOT = 'C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\'
-CORPUS = os.path.join(ROOT, 'data\\labelled_tweets\\ab')
+CORPUS = os.path.join(ROOT, 'data\\labelled_tweets\\b')
 RESULTS = os.path.join(ROOT, 'results')
 
 #mac
@@ -36,28 +36,19 @@ DOC_PATTERN = r'.*\.json'
 ## binary-classification
 ##########################################################################
 
+
 # target = 'bullying_trace'
-# result_filename = '/TRACE_results.json'
 # if __name__ == '__main__':
 #     corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace=target)
-#     loader = CorpusLoader(corpus, 5, label=target)
-#     # idx = (np.linspace(.1, 1.0, 10)*len(corpus.docs())).astype(int)
-#     for scores in score_models(binary_models, loader):
-#         with open(RESULTS+result_filename, 'a') as f:
-#             f.write(json.dumps(scores) + "\n")
-
-
-target = 'bullying_trace'
-if __name__ == '__main__':
-    corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace=target)
-    # perform classification with increasing training set size
-    idx = (np.linspace(1, 1.0, 1)*len(corpus.docs())).astype(int)
-    for i in idx: 
-        loader = CorpusLoader(corpus, 12, label=target, size=i)
-        for scores in score_models(binary_models, loader):
-            result_filename = '/TRACE_results'+str(i)+'.json'
-            with open(RESULTS+result_filename, 'a') as f:
-                f.write(json.dumps(scores) + "\n")
+#     # perform classification with increasing training set size
+#     idx = (np.linspace(1, 1.0, 1)*len(corpus.docs())).astype(int)
+#     # idx = [i for i in range(0, len(corpus.docs()), 100) ]
+#     for i in idx: 
+#         loader = CorpusLoader(corpus, 12, label=target, size=i)
+#         for scores in score_models(binary_models, loader):
+#             result_filename = '/TRACE_results'+str(i)+'.json'
+#             with open(RESULTS+result_filename, 'a') as f:
+#                 f.write(json.dumps(scores) + "\n")
 
 
 
@@ -66,29 +57,39 @@ if __name__ == '__main__':
 # ##########################################################################
 
 # target = 'bullying_role'
-# result_filename = '/ROLE_results.json'
 # if __name__ == '__main__':
 #     corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace=target)
-#     loader = CorpusLoader(corpus, 5, label=target)
-#     for scores in score_models(multiclass_models, loader):
-#         with open(RESULTS+result_filename, 'a') as f:
-#             f.write(json.dumps(scores) + "\n")
+#     idx = (np.linspace(1, 1.0, 1)*len(corpus.docs())).astype(int)
+#     # idx = [i for i in range(100, len(corpus.docs()), 100) ]
+#     for i in idx: 
+#         loader = CorpusLoader(corpus, 12, label=target, size=i)
+#         for scores in score_models(multiclass_models, loader):
+#             result_filename = '/ROLE_results'+str(i)+'.json'
+#             with open(RESULTS+result_filename, 'a') as f:
+#                 f.write(json.dumps(scores) + "\n")
+
 
 # target = 'form_of_bullying'
-# result_filename = '/FORM_results.json'
 # if __name__ == '__main__':
 #     corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace=target)
-#     loader = CorpusLoader(corpus, 5, label=target)
-#     for scores in score_models(multiclass_models, loader):
-#         with open(RESULTS+result_filename, 'a') as f:
-#             f.write(json.dumps(scores) + "\n")
+#     idx = (np.linspace(1, 1.0, 1)*len(corpus.docs())).astype(int)
+#     # idx = [i for i in range(100, len(corpus.docs()), 100) ]
+#     for i in idx: 
+#         loader = CorpusLoader(corpus, 12, label=target, size=i)
+#         for scores in score_models(multiclass_models, loader):
+#             result_filename = '/FORM_results'+str(i)+'.json'
+#             with open(RESULTS+result_filename, 'a') as f:
+#                 f.write(json.dumps(scores) + "\n")
 
 
-# target = 'bullying_post_type'
-# result_filename = '/TYPE_results.json'
-# if __name__ == '__main__':
-#     corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace=target)
-#     loader = CorpusLoader(corpus, 5, label=target)
-#     for scores in score_models(multiclass_models, loader):
-#         with open(RESULTS+result_filename, 'a') as f:
-#             f.write(json.dumps(scores) + "\n")
+target = 'bullying_post_type'
+if __name__ == '__main__':
+    corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace=target)
+    # idx = (np.linspace(1, 1.0, 1)*len(corpus.docs())).astype(int)
+    idx = [i for i in range(100, len(corpus.docs()), 100) ]
+    for i in idx: 
+        loader = CorpusLoader(corpus, 12, label=target, size=i)
+        for scores in score_models(multiclass_models, loader):
+            result_filename = '/TYPE_results'+str(i)+'.json'
+            with open(RESULTS+result_filename, 'a') as f:
+                f.write(json.dumps(scores) + "\n")

@@ -23,6 +23,8 @@ from sklearn.svm import SVC
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestRegressor
+
 from sklearn.decomposition import TruncatedSVD
 
 from sklearn.pipeline import Pipeline
@@ -62,6 +64,7 @@ multiclass_models = []
 multiclass_models.append(create_pipeline(LogisticRegression(solver='newton-cg',multi_class="multinomial"), False))
 multiclass_models.append(create_pipeline(SVC(kernel='linear'), False))
 multiclass_models.append(create_pipeline(KNeighborsClassifier(n_neighbors = 8), False))
+# multiclass_models.append(create_pipeline(RandomForestRegressor(n_estimators = 1000, random_state = 42), False))
 
 def score_models(models, loader):
 

@@ -12,8 +12,6 @@ from nltk.tokenize import TweetTokenizer
 from nltk.corpus.reader.util import StreamBackedCorpusView, concat, ZipFilePathPointer
 from nltk.corpus.reader.api import CorpusReader
 
-from geopy.geocoders import Nominatim
-
 DOC_PATTERN = r'.*\.json' 
 # PKL_PATTERN = r'.*\.pickle'
 

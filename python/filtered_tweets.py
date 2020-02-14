@@ -51,6 +51,7 @@ def filtered_tweets(path_infile, primary, secondary, additional, output_dir):
     data = pd.read_json(PATH_data, lines=True)
     cols = ['created_at', 'id', 'text', 'source', 'geo', 'coordinates', 'place', 'lang', 'extended_tweet']
     data = data[cols]
+    data['created_at'] = data['created_at'].astype(str)
 
     # extract full txt of extnd tweets
     data['full_tweet'] =  data['extended_tweet'].apply(pd.Series)['full_text']
@@ -67,6 +68,6 @@ def filtered_tweets(path_infile, primary, secondary, additional, output_dir):
     additionalfilter_data.to_json( path_outfile, orient='records', lines=True)
 
 
-#filtered_tweets(path_infile, primary, secondary, additional, output_dir)
+# filtered_tweets(path_infile, primary, secondary, additional, output_dir)
 
 

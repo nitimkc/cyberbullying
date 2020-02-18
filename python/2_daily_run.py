@@ -14,10 +14,9 @@ additional = PATH.joinpath(PATH.parents[0], 'python/additional_keywords.txt')
 
 # -------------------------------------------- #
 
-# take the data in original folder and 
-# apply filtered_tweets function to the files in folder
-# remove primary, secondary and additional keywords
-# dump in filtered folder
+# apply filtered_tweets function to all files in original folder
+# it removes primary, secondary and additional keywords from tweets
+# dump results in filtered folder
 
 input_dir = PATH.joinpath(PATH, 'original')
 output_dir = PATH.joinpath(PATH, 'filtered')
@@ -41,10 +40,9 @@ for file in files_to_process:
 
 # -------------------------------------------- #
 
-# take the data in filtered folder and 
-# apply timezone function to the files in folder
-# obtain timezone, local time and state of the tweet
-# dump in located_tweets folder
+# apply timezone function to all files in filtered folder
+# it adds timezone, local time and state variables for each tweet
+# dump results in located_tweets folder
 
 input_dir = PATH.joinpath(PATH, 'filtered')       
 output_dir = PATH.joinpath(PATH, 'located_tweets')
@@ -64,10 +62,10 @@ for file in files_to_process:
 # -------------------------------------------- #
 
 
-# load data from filtered folder 
-# apply sendforlabel_tweets function to the files
-# count urls, count hashtags and remove tweets with more than 5 hashtags, add columns for label
-# dump it in send_for_label folder
+# apply sendforlabel_tweets function to all files filtered located_tweets folder
+# it count urls, hashtags and removes tweets with more than 5 hashtags, adds columns for labelling
+# dump results in send_for_label folder
+# DUE TO REMOVAL OF HTTPS, SOME TWEETS MAY NOT APPEAR IN SEND_FOR_LABEL FOLDER
 
 input_dir = PATH.joinpath(PATH, 'located_tweets')
 output_dir = PATH.joinpath(PATH, 'send_for_label')

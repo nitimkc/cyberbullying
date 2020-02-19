@@ -29,15 +29,16 @@ def filter_keywords(data, keywords, omit=False):
 def filtered_tweets(path_infile, primary, secondary, additional, output_dir):
  
     # load and select reqd columns
-    data = pd.read_json(path_infile, lines=True)
+    data = pd.read_json(path_infile, lines=True, chunksize=1)
     cols = ['created_at', 'id', 'text', 'source', 'geo', 'coordinates', 'place', 'lang', 'extended_tweet']
     data = data[cols]
-    data['created_at'] = data['created_at'].astype(str)+'+00:00'
+    data['created_at'] = data['created_at'].astype(str)
 
     # extract full txt of extnd tweets
     data['full_tweet'] =  data['extended_tweet'].apply(pd.Series)['full_text']
     data['full_tweet'].fillna(data.text, inplace=True)
     data.drop(['text', 'extended_tweet'], axis=1, inplace=True)
+    data.drop_duplicates(subset='id', keep='first', inplace=True)
 
     # load primary keywords
     primaryfilter_data = filter_keywords(data=data, keywords=primary)
@@ -50,5 +51,31 @@ def filtered_tweets(path_infile, primary, secondary, additional, output_dir):
 
 
 # filtered_tweets(path_infile, primary, secondary, additional, output_dir)
+
+
+# from pathlib import Path
+# import os
+# import json
+# import pandas as pd
+
+# PATH = Path('/Users/peaceforlives/Documents/Projects/cyberbullying/data/')
+# file = 'tweets_2020-02-09.json'
+# input_dir = PATH.joinpath(PATH, 'original')
+# path_filename = PATH.joinpath(input_dir, file)
+# print(path_filename) 
+# path_infile = path_filename
+
+# with open(path_infile) as f:
+#     contents = f.read()
+# string_data = contents.split("\n")
+# list_data = []
+# removed_items = []
+# for i in range(0,len(string_data)):
+#     try:    
+#         list_data.append(json.loads(string_data[i]))
+#     except:
+#         removed_items.append(i)
+#         pass
+# data = pd.DataFrame.from_records(list_data)
 
 

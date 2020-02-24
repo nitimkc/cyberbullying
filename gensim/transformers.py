@@ -110,6 +110,5 @@ class GensimVectorizer(BaseEstimator, TransformerMixin):
 
     def transform(self, documents):
         for document in documents:
-            for tweet in document:
-                tweetvec = self.id2word.doc2bow(tweet)
+                tweetvec = self.id2word.doc2bow(document)
                 yield sparse2full(tweetvec, len(self.id2word))

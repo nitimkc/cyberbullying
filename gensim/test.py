@@ -3,6 +3,7 @@
 
 from reader import TweetsCorpusReader
 from loader import CorpusLoader
+from transformers import TextNormalizer_lemmatize
 
 import numpy as np
 import nltk
@@ -14,21 +15,41 @@ import re
 log = logging.getLogger("readability.readability")
 log.setLevel('WARNING')
 
-# #windows
-# ROOT = 'C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\'
-# CORPUS = os.path.join(ROOT, 'data\\labelled_tweets\\b')
-# RESULTS = os.path.join(ROOT, 'results')
+#windows
+ROOT = 'C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\'
+CORPUS = os.path.join(ROOT, 'data\\labelled_tweets\\b')
+RESULTS = os.path.join(ROOT, 'results')
 
 #mac
-ROOT = '/Users/peaceforlives/Documents/Projects/cyberbullying/'
-CORPUS = os.path.join(ROOT, 'data/labelled_tweets')
-RESULTS = os.path.join(ROOT, 'results')
+# ROOT = '/Users/peaceforlives/Documents/Projects/cyberbullying/'
+# CORPUS = os.path.join(ROOT, 'data/labelled_tweets')
+# RESULTS = os.path.join(ROOT, 'results')
 
 DOC_PATTERN = r'.*\.json' 
 
 target = 'bullying_trace'
 if __name__ == '__main__':
     corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace=target)
+    docs = corpus.process_tweet()
+    labels = list(corpus.fields(target))
+    normal = TextNormalizer_lemmatize()
+    normal.fit(docs, labels)
+    docs   = list(normal.transform(docs))
+    # import gensim
+    # from gensim.matutils import sparse2full
+    # id2word = gensim.corpora.Dictionary()
+    # for doc in docs:
+    #     for tweet in doc:
+    #         print(tweet)
+
+    #         docvec = id2word.doc2bow(tweet)
+
+    from transformers import GensimVectorizer
+    vect = GensimVectorizer('lexicon.pkl')
+    vect.fit(docs)
+    docs = vect.transform(docs)
+    print(next(docs))
+
     loader = CorpusLoader(corpus, folds=12)
     print(loader.n_docs)
     print(loader.n_folds)

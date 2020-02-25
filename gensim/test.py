@@ -5,6 +5,7 @@ from reader import TweetsCorpusReader
 from loader import CorpusLoader
 from transformers import TextNormalizer_lemmatize
 
+from pathlib import Path
 import numpy as np
 import nltk
 import os
@@ -15,15 +16,11 @@ import re
 log = logging.getLogger("readability.readability")
 log.setLevel('WARNING')
 
-#windows
-ROOT = 'C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\'
-CORPUS = os.path.join(ROOT, 'data\\labelled_tweets\\b')
-RESULTS = os.path.join(ROOT, 'results')
 
-#mac
-# ROOT = '/Users/peaceforlives/Documents/Projects/cyberbullying/'
-# CORPUS = os.path.join(ROOT, 'data/labelled_tweets')
-# RESULTS = os.path.join(ROOT, 'results')
+# ROOT = Path('C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\') # windows
+ROOT = Path('/Users/peaceforlives/Documents/Projects/cyberbullying/')         # mac
+CORPUS = Path.joinpath(ROOT, 'data', 'labelled_tweets', 'b')
+RESULTS = Path.joinpath(ROOT, 'results')
 
 DOC_PATTERN = r'.*\.json' 
 

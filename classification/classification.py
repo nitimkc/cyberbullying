@@ -9,6 +9,7 @@ from build import binary_models
 from build import multiclass_models
 from build import score_models
 
+from pathlib import Path
 import numpy as np
 import nltk
 import os
@@ -19,15 +20,10 @@ import re
 log = logging.getLogger("readability.readability")
 log.setLevel('WARNING')
 
-#windows
-ROOT = 'C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\'
-CORPUS = os.path.join(ROOT, 'data\\labelled_tweets\\b')
-RESULTS = os.path.join(ROOT, 'results')
-
-#mac
-# ROOT = '/Users/peaceforlives/Documents/Projects/cyberbullying/'
-# CORPUS = os.path.join(ROOT, 'data/labelled_tweets')
-# RESULTS = os.path.join(ROOT, 'results')
+ROOT = Path('C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\') # windows
+# ROOT = Path('/Users/peaceforlives/Documents/Projects/cyberbullying/')         # mac
+CORPUS = Path.joinpath(ROOT, 'data', 'labelled_tweets', 'b')
+RESULTS = Path.joinpath(ROOT, 'results')
 
 DOC_PATTERN = r'.*\.json' 
 
@@ -39,7 +35,7 @@ DOC_PATTERN = r'.*\.json'
 
 # target = 'bullying_trace'
 # if __name__ == '__main__':
-#     corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace=target)
+#     corpus = TweetsCorpusReader(CORPUS.__str__(), DOC_PATTERN, bullying_trace=target)
 #     # perform classification with increasing training set size
 #     idx = (np.linspace(1, 1.0, 1)*len(corpus.docs())).astype(int)
 #     # idx = [i for i in range(0, len(corpus.docs()), 100) ]
@@ -58,7 +54,7 @@ DOC_PATTERN = r'.*\.json'
 
 # target = 'bullying_role'
 # if __name__ == '__main__':
-#     corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace=target)
+#     corpus = TweetsCorpusReader(CORPUS.__str__(), DOC_PATTERN, bullying_trace=target)
 #     idx = (np.linspace(1, 1.0, 1)*len(corpus.docs())).astype(int)
 #     # idx = [i for i in range(100, len(corpus.docs()), 100) ]
 #     for i in idx: 
@@ -71,7 +67,7 @@ DOC_PATTERN = r'.*\.json'
 
 # target = 'form_of_bullying'
 # if __name__ == '__main__':
-#     corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace=target)
+#     corpus = TweetsCorpusReader(CORPUS.__str__(), DOC_PATTERN, bullying_trace=target)
 #     idx = (np.linspace(1, 1.0, 1)*len(corpus.docs())).astype(int)
 #     # idx = [i for i in range(100, len(corpus.docs()), 100) ]
 #     for i in idx: 
@@ -84,7 +80,7 @@ DOC_PATTERN = r'.*\.json'
 
 target = 'bullying_post_type'
 if __name__ == '__main__':
-    corpus = TweetsCorpusReader(CORPUS, DOC_PATTERN, bullying_trace=target)
+    corpus = TweetsCorpusReader(CORPUS.__str__(), DOC_PATTERN, bullying_trace=target)
     # idx = (np.linspace(1, 1.0, 1)*len(corpus.docs())).astype(int)
     idx = [i for i in range(100, len(corpus.docs()), 100) ]
     for i in idx: 

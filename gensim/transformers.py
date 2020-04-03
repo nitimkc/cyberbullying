@@ -21,6 +21,12 @@ from gensim.matutils import sparse2full
 import numpy as np
 import scipy.sparse as sp
 
+<<<<<<< HEAD
+import spacy
+from spacymoji import Emoji
+
+=======
+>>>>>>> 78a41882454b4acb17f8ed2e6e4a30676a7ccf73
 class TextNormalizer_lemmatize(BaseEstimator, TransformerMixin):
 
     def __init__(self, language='english'):
@@ -66,9 +72,16 @@ class TextNormalizer_lemmatize(BaseEstimator, TransformerMixin):
 
 class GensimVectorizer(BaseEstimator, TransformerMixin):
 
+<<<<<<< HEAD
+    def __init__(self, path=None, library='en_core_web_md'):
+        self.path = path
+        self.id2word = None
+        self.nlp = spacy.load(library) # includes 20k unique vectors with 300 dimensions
+=======
     def __init__(self, path=None):
         self.path = path
         self.id2word = None
+>>>>>>> 78a41882454b4acb17f8ed2e6e4a30676a7ccf73
 
         self.load()
 
@@ -93,6 +106,35 @@ class GensimVectorizer(BaseEstimator, TransformerMixin):
     #         # print(docvec)
     #         yield docvec
 
+<<<<<<< HEAD
+    # def transform(self, documents):
+    #     docvecs = []
+    #     for doc in documents:
+    #         docvecs.append(self.id2word.doc2bow(doc))
+    #     docvecs = [sparse2full(docvec, len(self.id2word)) for docvec in docvecs]
+    #     docvec_mat = sp.csr_matrix(docvecs,  dtype=np.float64)
+    #     # print(docvec_mat.shape)
+    #     return docvec_mat
+
+    # A pre-trained model is a set of word embeddings that have been created elsewhere 
+    # that you simply load onto your computer and into memory. They can leverage 
+    # massive datasets that you may not have access to that captures word meanings 
+    # in a statistically robust manner. The disadvantage of pre-trained word embeddings 
+    # is that the words contained within may not capture the peculiarities of language 
+    # in your specific application domain. 
+    # def transform(self, documents):
+    #     emoji = Emoji(self.nlp)
+    #     self.nlp.add_pipe(emoji, first=True)
+
+    #     docvecs = []
+    #     for doc in documents:
+    #         docvec = self.nlp(' '.join(doc))
+    #         docvecs.append(docvec.vector)
+    #     docvec_mat = sp.csr_matrix(docvecs,  dtype=np.float64)
+
+    #     return docvec_mat
+
+=======
     def transform(self, documents):
         docvecs = []
         for doc in documents:
@@ -101,4 +143,5 @@ class GensimVectorizer(BaseEstimator, TransformerMixin):
         docvec_mat = sp.csr_matrix(docvecs,  dtype=np.float64)
         # print(docvec_mat.shape)
         return docvec_mat
+>>>>>>> 78a41882454b4acb17f8ed2e6e4a30676a7ccf73
 

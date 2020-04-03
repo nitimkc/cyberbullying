@@ -2,8 +2,12 @@ import os
 import time
 import string
 import pickle
+<<<<<<< HEAD
+import numpy as np
+=======
 
 
+>>>>>>> 78a41882454b4acb17f8ed2e6e4a30676a7ccf73
 from operator import itemgetter
 
 from nltk.corpus import stopwords as sw
@@ -15,7 +19,11 @@ from nltk import pos_tag
 
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import LabelEncoder
+<<<<<<< HEAD
+from sklearn.linear_model import LogisticRegressionCV
+=======
 from sklearn.linear_model import LogisticRegression
+>>>>>>> 78a41882454b4acb17f8ed2e6e4a30676a7ccf73
 from sklearn.base import BaseEstimator, TransformerMixin
 
 from sklearn.metrics import classification_report as clsr
@@ -40,7 +48,11 @@ def timeit(func):
 def identity(words):
     return words
 
+<<<<<<< HEAD
+def build_and_evaluate(X, y, n=None, classifier=LogisticRegressionCV, outpath=None, verbose=True, multiclass=False):
+=======
 def build_and_evaluate(X, y, n=None, classifier=LogisticRegression, outpath=None, verbose=True):
+>>>>>>> 78a41882454b4acb17f8ed2e6e4a30676a7ccf73
     """
     Builds a classifer for the given list of documents and targets in two
     stages: the first does a train/test split and prints a classifier report,
@@ -61,8 +73,16 @@ def build_and_evaluate(X, y, n=None, classifier=LogisticRegression, outpath=None
         Inner build function that builds a single model.
         """
         if isinstance(classifier, type):
+<<<<<<< HEAD
+            if multiclass:
+                classifier = classifier(cv=10, random_state=0,  max_iter=1000, solver='newton-cg', multi_class="multinomial")
+            else:
+                classifier = classifier(cv=10, random_state=0,  max_iter=1000)
+        
+=======
             classifier = classifier(solver='lbfgs', penalty='none')
 
+>>>>>>> 78a41882454b4acb17f8ed2e6e4a30676a7ccf73
         model = Pipeline([
             # ('preprocessor', TextNormalizer_lemmatize()),
             ('vectorizer', TfidfVectorizer(
@@ -81,31 +101,64 @@ def build_and_evaluate(X, y, n=None, classifier=LogisticRegression, outpath=None
 
     # Begin evaluation
     if n:
+<<<<<<< HEAD
+        if verbose: print("splitting test and test set by: "+str(n))
+        X_train, X_test, y_train, y_test = tts(X, y, test_size=n)
+        # X_train, X_test, y_train, y_test = X[:n], X[n:], y[:n], y[n:]
+        print(len(X_train), len(X_test))
+        from collections import Counter
+        print(Counter(y_train))
+
+        model, secs = build(classifier, X_train, y_train)
+        model.labels_ = labels
+=======
         if verbose: print("Building for evaluation")
         X_train, X_test, y_train, y_test = tts(X, y, test_size=n)
         model, secs = build(classifier, X_train, y_train)
+>>>>>>> 78a41882454b4acb17f8ed2e6e4a30676a7ccf73
 
         if verbose: print("Evaluation model fit in {:0.3f} seconds".format(secs))
         y_pred = model.predict(X_test)
 
         if verbose: print("Classification Report:\n")
         print(clsr(y_test, y_pred, target_names=labels.classes_))
+<<<<<<< HEAD
+        print(cm(y_test, y_pred))
+        print('acc', accuracy_score(y_test, y_pred))
+        print('f1', f1_score(y_test, y_pred, average='weighted'))
+
+    else:
+        if verbose: print("Building for evaluation with full set")    
+        model, secs = build(classifier, X, y)
+        model.labels_ = labels
+=======
         print(cm(y_test, y_pred, labels=[1,0]))
 
     else:
         if verbose: print("Building for evaluation")    
         model, secs = build(classifier, X, y)
+>>>>>>> 78a41882454b4acb17f8ed2e6e4a30676a7ccf73
 
         if verbose: print("Evaluation model fit in {:0.3f} seconds".format(secs))
         y_pred = model.predict(X)
 
         if verbose: print("Classification Report:\n")
         print(clsr(y, y_pred, target_names=labels.classes_))
+<<<<<<< HEAD
+        print(cm(y, y_pred))
+        print(accuracy_score(y, y_pred))
+
+    if verbose: print("Evaluation of naive prediction ...")
+    y_naive = [0]*len(y_test)
+    print(type(y_test))
+    print('acc naive', accuracy_score(y_test, y_naive))
+=======
         print(cm(y, y_pred, labels=[1,0]))
 
     if verbose: print("Building complete model and saving ...")
     model, secs = build(classifier, X, y)
     model.labels_ = labels
+>>>>>>> 78a41882454b4acb17f8ed2e6e4a30676a7ccf73
 
     if verbose: print("Complete model fit in {:0.3f} seconds".format(secs))
 

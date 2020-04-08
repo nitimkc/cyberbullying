@@ -19,11 +19,13 @@ from nltk.stem import SnowballStemmer
 from sklearn.base import BaseEstimator, TransformerMixin
 from gensim.matutils import sparse2full
 
-class TextNormalizer_lemmatize(BaseEstimator, TransformerMixin):
+class TextNormalizer(BaseEstimator, TransformerMixin):
 
-    def __init__(self, language='english'):
+    def __init__(self, language='english', lemma=True):
+        self.lemmate = lemma 
         self.stopwords  = set(nltk.corpus.stopwords.words(language))
         self.lemmatizer = WordNetLemmatizer()
+        self.stemmer = SnowballStemmer(language)
 
     def is_punct(self, token):
         return all(
@@ -32,13 +34,6 @@ class TextNormalizer_lemmatize(BaseEstimator, TransformerMixin):
 
     def is_stopword(self, token):
         return token.lower() in self.stopwords
-
-    def normalize(self, document):
-        return [
-            self.lemmatize(token, tag).lower()
-            for (token, tag) in document
-            if not self.is_punct(token) #and not self.is_stopword(token)
-        ]
 
     def lemmatize(self, token, pos_tag):
         tag = {
@@ -50,43 +45,31 @@ class TextNormalizer_lemmatize(BaseEstimator, TransformerMixin):
 
         return self.lemmatizer.lemmatize(token, tag)
 
-    def fit(self, X, y=None):
-        return self
-
-    def transform(self, documents):
-        for document in documents:
-            yield self.normalize(document)
-
-
-class TextNormalizer_stem(BaseEstimator, TransformerMixin):
-    
-    # Initialization function
-    def __init__(self, language='english'):
-        self.stopwords = set(nltk.corpus.stopwords.words(language))
-        self.stemmer = SnowballStemmer(language)
-    
-    def is_punct(self, token):
-        return all(unicodedata.category(char).startswith('P') for char in token)
-    
-    def is_stopword(self, token):
-        return token.lower() in self.stopwords
-    
-    def normalize(self, document):
-        return [
-            self.stemmize(token, tag).lower()
+    def normalize_lemm(self, document):
+        return ' '.join([
+            self.lemmatize(token, tag).lower()
             for (token, tag) in document
-            if not self.is_punct(token) and not self.is_stopword(token)
-        ]
+            if not self.is_punct(token) #and not self.is_stopword(token)
+        ])
     
     def stemmize(self, token, pos_tag):
         return self.stemmer.stem(token.lower())
-    
+
+    def normalize_stem(self, document):
+        return ' '.join([
+            self.stemmize(token, tag).lower()
+            for (token, tag) in document
+            if not self.is_punct(token) and not self.is_stopword(token)
+        ])
+
     def fit(self, X, y=None):
         return self
-    
+
     def transform(self, documents):
         for document in documents:
-            yield self.normalize(document)
+            if self.lemmate:
+                yield self.normalize_lemm(document)
+            yield self.normalize_stem(document)
 
 
 # class GensimVectorizer(BaseEstimator, TransformerMixin):

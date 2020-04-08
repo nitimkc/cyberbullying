@@ -8,17 +8,17 @@ import os
 
 def filter_keywords(data, keywords, omit=False):
 
-    # load primary keywords
+    # load keywords
     filter = open(keywords, 'r', newline='')
     match = filter.read().splitlines()
     filter.close()
 
-    # search for secondary keywords in full text tweets
+    # search for keywords in full text tweets
     data['full_tweet'] = data['full_tweet'].str.lower()
     to_match = '\\b(' + '|'.join(match) + ')\\b'
     matched_idx = data['full_tweet'].str.contains(to_match, case=False)
 
-    # decision based on whether the match is to be included or excluded 
+    # decision based on omit-whether the match is to be included or excluded 
     if omit==True:
         matched_data  = data[-matched_idx]
     else:
@@ -29,7 +29,12 @@ def filter_keywords(data, keywords, omit=False):
 def filtered_tweets(path_infile, primary, secondary, additional, output_dir):
  
     # load and select reqd columns
-    data = pd.read_json(path_infile, lines=True, chunksize=1)
+    data = pd.read_json(path_infile, lines=True)
+    # data = pd.DataFrame()
+    # reader = pd.read_json(path_infile, lines=True, chunksize=1)
+    # for i in reader:
+    #     data.append(i)
+    
     cols = ['created_at', 'id', 'text', 'source', 'geo', 'coordinates', 'place', 'lang', 'extended_tweet']
     data = data[cols]
     data['created_at'] = data['created_at'].astype(str)

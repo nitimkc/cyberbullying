@@ -12,7 +12,7 @@ import json
 from reader import TweetsCorpusReader
 from loader import CorpusLoader
 
-from transformers import TextNormalizer_lemmatize, GensimVectorizer
+from transformers import TextNormalizer, GensimVectorizer
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
@@ -38,9 +38,10 @@ def identity(words):
 def create_pipeline(estimator, reduction=False):
 
     steps = [
-        ('normalize', TextNormalizer_lemmatize()),
+        ('normalize', TextNormalizer(lemma=False)),
+        ('vectorize', CountVectorizer(binary=True, lowercase=False))
         # ('vectorize', CountVectorizer(ngram_range=(1, 4), analyzer='char', lowercase=False))
-        ('ngram_vect', TfidfVectorizer(tokenizer=identity, preprocessor=None, lowercase=False, ngram_range=(1,2)))        
+        # ('ngram_vect', TfidfVectorizer(tokenizer=identity, preprocessor=None, lowercase=False, ngram_range=(1,2)))        
     ]
     
     if reduction:

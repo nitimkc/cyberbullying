@@ -26,7 +26,7 @@ def get_timezone(tweet):
             address = locator.reverse( str(lat)+' '+str(lon)).raw['address']      # get address from lookup
         except GeocoderTimedOut as e:
             print("timeout error")
-            time.sleep(10)
+            time.sleep(60)
             address = locator.reverse( str(lat)+' '+str(lon)).raw['address']      # get address from lookup
 
         if address['country_code'] in ['ca', 'us']:                               # select US or Canada only
@@ -36,7 +36,7 @@ def get_timezone(tweet):
             date = date.replace(tzinfo = pytz.timezone('UTC'))
             tweet['localtime'] = date.astimezone(pytz.timezone(tweet['timezone'])).strftime('%Y-%m-%d %H:%M:%S %Z%z')    # get time of local zone
             tweet['state'] = address['state']                                                                       # get the state/province 
-            print(tweet['timezone'], tweet['localtime'], tweet['state'])
+            # print(tweet['timezone'], tweet['localtime'], tweet['state'])
 
     return tweet
 

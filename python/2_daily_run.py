@@ -24,9 +24,7 @@ output_dir = PATH.joinpath(PATH, 'filtered')
 files_to_process = list( set( os.listdir(input_dir) ) - set( os.listdir(output_dir) ) ) # files already process should not be processed
 # files_to_process = os.listdir(input_dir)
 # files_to_process.sort()
-# files_to_process = files_to_process[:15]
-# files_to_process
-# file = 'tweets_2020-02-09.json'
+# file = 'tweets_2020-02-08.json'
 
 for file in files_to_process:
     path_filename = PATH.joinpath(input_dir, file)       # join filename to input directory
@@ -46,8 +44,9 @@ for file in files_to_process:
 
 input_dir = PATH.joinpath(PATH, 'filtered')       
 output_dir = PATH.joinpath(PATH, 'located_tweets')
-# files_to_process = os.listdir(input_dir)
-# file = 'tweets_2020-02-09.json'
+files_to_process = os.listdir(input_dir)
+files_to_process.sort()
+# file = 'tweets_2019-10-01.json'
 
 for file in files_to_process: 
     path_filename = PATH.joinpath(input_dir, file)       # join filename to input directory

@@ -3,7 +3,7 @@
 
 from reader import TweetsCorpusReader
 from loader import CorpusLoader
-from transformers import TextNormalizer_lemmatize, GensimVectorizer
+from transformers import TextNormalizer, GensimTfidfVectorizer
 from sklearn.preprocessing import LabelEncoder
 
 from pathlib import Path
@@ -18,53 +18,60 @@ log = logging.getLogger("readability.readability")
 log.setLevel('WARNING')
 
 
-ROOT = Path('C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\') # windows
-# ROOT = Path('/Users/peaceforlives/Documents/Projects/cyberbullying/')         # mac
-CORPUS = Path.joinpath(ROOT, 'data', 'labelled_tweets', 'b')
+# ROOT = Path('C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\') # windows
+ROOT = Path('/Users/peaceforlives/Documents/Projects/cyberbullying/')         # mac
+CORPUS = Path.joinpath(ROOT, 'data', 'labelled_tweets', 'ab')
 RESULTS = Path.joinpath(ROOT, 'results')
 
 DOC_PATTERN = r'.*\.json' 
 
+
+##########################################################################
+## binary-classification
+##########################################################################
 target = 'bullying_trace'
-<<<<<<< HEAD
-target = 'bullying_role'
-target = 'form_of_bullying'
-target = 'bullying_post_type'
-=======
->>>>>>> 78a41882454b4acb17f8ed2e6e4a30676a7ccf73
+# target = 'bullying_role'
+# target = 'form_of_bullying'
+# target = 'bullying_post_type'
 if __name__ == '__main__':
 
     from sklearn.pipeline import Pipeline
     from sklearn.linear_model import LogisticRegression
     from sklearn.naive_bayes import MultinomialNB
     from sklearn.metrics import accuracy_score
+    from sklearn.metrics import f1_score
+    from sklearn.model_selection import train_test_split as tts
+    from sklearn.preprocessing import LabelEncoder
 
     corpus = TweetsCorpusReader(CORPUS.__str__(), DOC_PATTERN, bullying_trace=target)
     docs = corpus.process_tweet()
-    labels = list(corpus.fields(target))
-<<<<<<< HEAD
+    y = list(corpus.fields(target))
     from collections import Counter
-    Counter(labels)
-
-    model = Pipeline([
-        ('normalizer', TextNormalizer_lemmatize()),
-        ('gensim_vect', GensimVectorizer('lexicon.pkl')),
-        ('logistic', LogisticRegression())
-        # ('bayes', MultinomialNB())
-    ])
-    model.fit(docs, labels)
+    Counter(y)
+    labels = LabelEncoder()
+    y = labels.fit_transform(y)
+    # model = Pipeline([
+    #     ('normalizer', TextNormalizer()),
+    #     ('gensim_vect', GensimVectorizer('lexicon.pkl')),
+    #     ('logistic', LogisticRegression())
+    #     # ('bayes', MultinomialNB())
+    # ])
+    # model.fit(docs, labels)
+    # model.predict(gensim_docs)
     
-    normal = TextNormalizer_lemmatize()
-    norm_docs = normal.fit_transform(docs)
-    gensim = GensimVectorizer('lexicon.pkl')
+    normal = TextNormalizer()
+    norm_docs = list(normal.fit_transform(docs))
+    gensim = GensimTfidfVectorizer()
     gensim_docs = gensim.fit_transform(norm_docs)
+    gensim_docs
 
-    model.predict(gensim_docs)
+    X_train, X_test, y_train, y_test = tts(gensim_docs, y, test_size=0.2)
 
     clf = LogisticRegression()
-    clf.fit(gensim_docs, labels)
-    y_pred = clf.predict(gensim_docs)
-    accuracy_score(y_pred, labels)
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
+    f1_score(y_pred, y_test)
+    accuracy_score(y_pred, y_test)
 
     from gensim.models import Word2Vec
     from gensim.models.phrases import Phraser, Phrases
@@ -91,7 +98,3 @@ if __name__ == '__main__':
         docvec = np.mean( np.array([model[i] for i in doc]), axis=0)
         return doc
     test = [avg_vec(doc) for doc in norm_docs]
-=======
-
-   
->>>>>>> 78a41882454b4acb17f8ed2e6e4a30676a7ccf73

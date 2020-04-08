@@ -20,9 +20,9 @@ import re
 log = logging.getLogger("readability.readability")
 log.setLevel('WARNING')
 
-ROOT = Path('C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\') # windows
-# ROOT = Path('/Users/peaceforlives/Documents/Projects/cyberbullying/')         # mac
-CORPUS = Path.joinpath(ROOT, 'data', 'labelled_tweets', 'b')
+# ROOT = Path('C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\') # windows
+ROOT = Path('/Users/peaceforlives/Documents/Projects/cyberbullying/')         # mac
+CORPUS = Path.joinpath(ROOT, 'data', 'labelled_tweets', 'ab')
 RESULTS = Path.joinpath(ROOT, 'results')
 
 DOC_PATTERN = r'.*\.json' 
@@ -33,18 +33,23 @@ DOC_PATTERN = r'.*\.json'
 ##########################################################################
 
 
-# target = 'bullying_trace'
-# if __name__ == '__main__':
-#     corpus = TweetsCorpusReader(CORPUS.__str__(), DOC_PATTERN, bullying_trace=target)
-#     # perform classification with increasing training set size
-#     idx = (np.linspace(1, 1.0, 1)*len(corpus.docs())).astype(int)
-#     # idx = [i for i in range(0, len(corpus.docs()), 100) ]
-#     for i in idx: 
-#         loader = CorpusLoader(corpus, 12, label=target, size=i)
-#         for scores in score_models(binary_models, loader):
-#             result_filename = '/TRACE_results'+str(i)+'.json'
-#             with open(RESULTS+result_filename, 'a') as f:
-#                 f.write(json.dumps(scores) + "\n")
+target = 'bullying_trace'
+if __name__ == '__main__':
+    corpus = TweetsCorpusReader(CORPUS.__str__(), DOC_PATTERN, bullying_trace=target)
+    # processed_tweets = corpus.process_tweet()
+    # normalize  = TextNormalizer(lemma=True)
+    # normalized_tweets = list(normalize.fit_transform(processed_tweets)) 
+    # X = [' '.join(doc) for doc in normalized_tweets]
+
+    # perform classification with increasing training set size
+    idx = (np.linspace(1, 1.0, 1)*len(corpus.docs())).astype(int)
+    # idx = [i for i in range(0, len(corpus.docs()), 100) ]
+    for i in idx: 
+        loader = CorpusLoader(corpus, 12, label=target, size=i)
+        for scores in score_models(binary_models, loader):
+            result_filename = 'TRACE_results'+str(i)+'.json'
+            with open(Path.joinpath(RESULTS,result_filename), 'a') as f:
+                f.write(json.dumps(scores) + '\n')
 
 
 
@@ -60,8 +65,8 @@ DOC_PATTERN = r'.*\.json'
 #     for i in idx: 
 #         loader = CorpusLoader(corpus, 12, label=target, size=i)
 #         for scores in score_models(multiclass_models, loader):
-#             result_filename = '/ROLE_results'+str(i)+'.json'
-#             with open(RESULTS+result_filename, 'a') as f:
+#             result_filename = 'ROLE_results'+str(i)+'.json'
+#             with open(Path.joinpath(RESULTS,result_filename), 'a') as f:
 #                 f.write(json.dumps(scores) + "\n")
 
 
@@ -73,19 +78,19 @@ DOC_PATTERN = r'.*\.json'
 #     for i in idx: 
 #         loader = CorpusLoader(corpus, 12, label=target, size=i)
 #         for scores in score_models(multiclass_models, loader):
-#             result_filename = '/FORM_results'+str(i)+'.json'
-#             with open(RESULTS+result_filename, 'a') as f:
+#             result_filename = 'FORM_results'+str(i)+'.json'
+#             with open(Path.joinpath(RESULTS,result_filename), 'a') as f:
 #                 f.write(json.dumps(scores) + "\n")
 
 
-target = 'bullying_post_type'
-if __name__ == '__main__':
-    corpus = TweetsCorpusReader(CORPUS.__str__(), DOC_PATTERN, bullying_trace=target)
-    # idx = (np.linspace(1, 1.0, 1)*len(corpus.docs())).astype(int)
-    idx = [i for i in range(100, len(corpus.docs()), 100) ]
-    for i in idx: 
-        loader = CorpusLoader(corpus, 12, label=target, size=i)
-        for scores in score_models(multiclass_models, loader):
-            result_filename = '/TYPE_results'+str(i)+'.json'
-            with open(RESULTS+result_filename, 'a') as f:
-                f.write(json.dumps(scores) + "\n")
+# target = 'bullying_post_type'
+# if __name__ == '__main__':
+#     corpus = TweetsCorpusReader(CORPUS.__str__(), DOC_PATTERN, bullying_trace=target)
+#     # idx = (np.linspace(1, 1.0, 1)*len(corpus.docs())).astype(int)
+#     idx = [i for i in range(100, len(corpus.docs()), 100) ]
+#     for i in idx: 
+#         loader = CorpusLoader(corpus, 12, label=target, size=i)
+#         for scores in score_models(multiclass_models, loader):
+#             result_filename = 'TYPE_results'+str(i)+'.json'
+#             with open(Path.joinpath(RESULTS,result_filename), 'a') as f:
+#                 f.write(json.dumps(scores) + "\n")

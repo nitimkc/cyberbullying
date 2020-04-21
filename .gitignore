@@ -1,6 +1,9 @@
 application/cache
 pix/
 interrater/*.xlsx
+interrater/a/
+interrater/b/
+interrater/random
 python/twitter_credentials.py
 python/unused/
 python/twitter_credentials_fullarchive.py
@@ -11,6 +14,7 @@ data/
 contracts/
 readings/
 docs/
+gensim/
 R/
 final_classification/results/
 .Rproj.user

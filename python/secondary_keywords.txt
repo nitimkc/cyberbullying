@@ -16,9 +16,9 @@ forced
 spread
 rumor
 rumour
-embarass
-embarassing
-embarassed
+embarrass
+embarrassing
+embarrassed
 repeatedly
 repeat
 mock

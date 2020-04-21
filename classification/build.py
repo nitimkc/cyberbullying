@@ -38,10 +38,10 @@ def identity(words):
 def create_pipeline(estimator, reduction=False):
 
     steps = [
-        ('normalize', TextNormalizer(lemma=False)),
-        ('vectorize', CountVectorizer(binary=True, lowercase=False))
-        # ('vectorize', CountVectorizer(ngram_range=(1, 4), analyzer='char', lowercase=False))
-        # ('ngram_vect', TfidfVectorizer(tokenizer=identity, preprocessor=None, lowercase=False, ngram_range=(1,2)))        
+        ('normalize', TextNormalizer(lemma=True)),
+        # ('vectorize', CountVectorizer(binary=True, lowercase=False)) #ohe
+        # ('vectorize', CountVectorizer(ngram_range=(1, 4), analyzer='char', lowercase=False)) #freq
+        ('vectorize', TfidfVectorizer(tokenizer=identity, preprocessor=None, lowercase=False, ngram_range=(1,2), max_features=13000, max_df=0.85, min_df=2))        
     ]
     
     if reduction:
@@ -57,8 +57,8 @@ for form in (LogisticRegression, SGDClassifier):
     binary_models.append(create_pipeline(form(), True))
     binary_models.append(create_pipeline(form(), False))
 binary_models.append(create_pipeline(SVC(kernel='linear'), False))
-binary_models.append(create_pipeline(MultinomialNB(), False))
-binary_models.append(create_pipeline(GaussianNB(), True))
+# binary_models.append(create_pipeline(MultinomialNB(), False))
+# binary_models.append(create_pipeline(GaussianNB(), True))
 
 multiclass_models = []
 # multiclass_models.append(create_pipeline(GaussianNB(), False))
@@ -88,6 +88,11 @@ def score_models(models, loader):
         }
 
         for X_train, X_test, y_train, y_test in loader:
+            from collections import Counter
+            print(len(X_train))
+            print(len(X_test))
+            print('y_train', Counter(y_train))
+            print('y_test', Counter(y_test))
             
             start = time.time()
             model.fit(X_train, y_train)

@@ -46,21 +46,21 @@ class TextNormalizer(BaseEstimator, TransformerMixin):
         return self.lemmatizer.lemmatize(token, tag)
 
     def normalize_lemm(self, document):
-        return ' '.join([
+        return [
             self.lemmatize(token, tag).lower()
             for (token, tag) in document
             if not self.is_punct(token) #and not self.is_stopword(token)
-        ])
+        ]
     
     def stemmize(self, token, pos_tag):
         return self.stemmer.stem(token.lower())
 
     def normalize_stem(self, document):
-        return ' '.join([
+        return [
             self.stemmize(token, tag).lower()
             for (token, tag) in document
-            if not self.is_punct(token) and not self.is_stopword(token)
-        ])
+            if not self.is_punct(token) #and not self.is_stopword(token)
+        ]
 
     def fit(self, X, y=None):
         return self
@@ -69,34 +69,20 @@ class TextNormalizer(BaseEstimator, TransformerMixin):
         for document in documents:
             if self.lemmate:
                 yield self.normalize_lemm(document)
-            yield self.normalize_stem(document)
+            else:
+                yield self.normalize_stem(document)
+
+    # def transform(self, documents):
+    #     norm_tweet = []
+    #     for document in documents:
+    #         if self.lemmate:
+    #             norm_tweet.append(self.normalize_lemm(document))
+    #         else:
+    #             norm_tweet.append(self.normalize_stem(document))  
+    #     return norm_tweet
 
 
-# class GensimVectorizer(BaseEstimator, TransformerMixin):
 
-#     def __init__(self, path=None):
-#         self.path = path
-#         self.id2word = None
-
-#         self.load()
-
-#     def load(self):
-#         if os.path.exists(self.path):
-#             self.id2word = gensim.corpora.Dictionary.load(self.path)
-
-#     def save(self):
-#         self.id2word.save(self.path)
-
-#     def fit(self, documents, labels=None):
-#         self.id2word = gensim.corpora.Dictionary(documents)
-#         self.save()
-
-#     def transform(self, documents):
-#         for document in documents:
-#             for tweet in document:
-#                 tweetvec = self.id2word.doc2bow(tweet)
-#                 yield sparse2full(tweetvec, len(self.id2word))
-import scipy.sparse as sp
 class GensimVectorizer(BaseEstimator, TransformerMixin):
 
     def __init__(self, path=None):
@@ -116,15 +102,8 @@ class GensimVectorizer(BaseEstimator, TransformerMixin):
         self.id2word = gensim.corpora.Dictionary(documents)
         self.save()
 
-    # def transform(self, documents):
-    #     for document in documents:
-    #             tweetvec = self.id2word.doc2bow(document)
-    #             yield sparse2full(tweetvec, len(self.id2word))
-
     def transform(self, documents):
-        tweetvec = []
-        for tweet in documents:
-            tweetvec.append(self.id2word.doc2bow(tweet))
-        docvec = [sparse2full(tweet, len(self.id2word)) for tweet in tweetvec]
-        return sp.csr_matrix(docvec)
-
+        for document in documents:
+            for tweet in document:
+                tweetvec = self.id2word.doc2bow(tweet)
+                yield sparse2full(tweetvec, len(self.id2word))

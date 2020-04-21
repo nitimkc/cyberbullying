@@ -20,6 +20,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from gensim.matutils import sparse2full
 from gensim.corpora import Dictionary
 from gensim.models.tfidfmodel import TfidfModel
+from gensim.models.doc2vec import TaggedDocument, Doc2Vec
 
 import numpy as np
 import scipy.sparse as sp
@@ -89,36 +90,60 @@ class TextNormalizer(BaseEstimator, TransformerMixin):
     #             norm_tweet.append(self.normalize_stem(document))  
     #     return norm_tweet
 
-class GensimVectorizer(BaseEstimator, TransformerMixin):
 
-    def __init__(self, path=None):
-        self.path = path
-        self.id2word = None
-        # self.nlp = spacy.load(library) # includes 20k unique vectors with 300 dimensions
+
+class GensimTfidfVectorizer(BaseEstimator, TransformerMixin):
+
+    def __init__(self, dirpath=".", type='tfidf', tofull=False, vec_size=100):
+        """
+        Pass in a directory that holds the lexicon in corpus.dict and the
+        TFIDF model in tfidf.model (for now).
+        Set tofull = True if the next thing is a Scikit-Learn estimator
+        otherwise keep False if the next thing is a Gensim model.
+        """
+        self._type = type
+        self._lexicon_path = os.path.join(dirpath, "corpus.dict")
+        self._model_path = os.path.join(dirpath, type+".model")
+        self.lexicon = None
+        self.model = None
+        self.tofull = tofull
+        self._nfeat = vec_size
 
         self.load()
 
     def load(self):
-        if os.path.exists(self.path):
-            self.id2word = gensim.corpora.Dictionary.load(self.path)
+
+        if os.path.exists(self._lexicon_path):
+            self.lexicon = Dictionary.load(self._lexicon_path)
+
+        if os.path.exists(self._model_path):
+            self.model = TfidfModel().load(self._model_path)
 
     def save(self):
-        self.id2word.save(self.path)
+        self.lexicon.save(self._lexicon_path)
+        self.model.save(self._model_path)
 
     def fit(self, documents, labels=None):
-        self.id2word = gensim.corpora.Dictionary(documents)
+        if self._type=="tfidf":
+            self.lexicon = Dictionary(documents)
+            self.model = TfidfModel( [self.lexicon.doc2bow(doc) for doc in documents], id2word=self.lexicon )
         self.save()
         return self
 
     def transform(self, documents):
-        docvecs = []
-        for document in documents:
-            # vec = self.id2word.doc2bow(document)
-            vec = [ [ (token[0], 1) for token in self.id2word.doc2bow(document) ]
-                        for document in documents ] 
-            docvecs.append( vec )
-        docvecs = [ sparse2full(docvec, len(self.id2word)) for docvec in docvecs ]
-        docvec_mat = sp.csr_matrix(docvecs, dtype=np.float64)
+        if self._type=="doc2vec":
+            taggeddoc = [ TaggedDocument(words, ['d{}'.format(idx)]) for idx, words in enumerate(documents) ]
+            model = Doc2Vec( taggeddoc, vector_size=self._nfeat, window=2, min_count=1, workers=4)
+            docvec_mat = self.model.docvecs.vectors_docs 
+        else:
+            if self._type=="count":
+                docvecs = [ self.lexicon.doc2bow(document) for document in documents]
+            elif self._type=="ohe":
+                docvecs = [ [(token[0], 1) for token in self.lexicon.doc2bow(document)] for document in documents ]
+            else: 
+                docvecs = [ self.tfidf[self.lexicon.doc2bow(document)] for document in documents ]
+            docvecs = [ sparse2full(docvec, len(self.lexicon)) for docvec in docvecs ]
+            docvec_mat = sp.csr_matrix(docvecs, dtype=np.float64)
         return docvec_mat
 
     # def transform(self, documents):
@@ -128,55 +153,6 @@ class GensimVectorizer(BaseEstimator, TransformerMixin):
     #         docvec = sp.csr_matrix(docvec, dtype=np.float64)
     #         # print(docvec)
     #         yield docvec
-
-    #     def transform(self, documents):
-    #             for tweet in documents:
-    #                 tweetvec = self.id2word.doc2bow(tweet)
-    #                 yield sparse2full(tweetvec, len(self.id2word))
-
-
-class GensimTfidfVectorizer(BaseEstimator, TransformerMixin):
-
-    def __init__(self, dirpath=".", tofull=False):
-        """
-        Pass in a directory that holds the lexicon in corpus.dict and the
-        TFIDF model in tfidf.model (for now).
-        Set tofull = True if the next thing is a Scikit-Learn estimator
-        otherwise keep False if the next thing is a Gensim model.
-        """
-        self._lexicon_path = os.path.join(dirpath, "corpus.dict")
-        self._tfidf_path = os.path.join(dirpath, "tfidf.model")
-
-        self.lexicon = None
-        self.tfidf = None
-        self.tofull = tofull
-
-        self.load()
-
-    def load(self):
-
-        if os.path.exists(self._lexicon_path):
-            self.lexicon = Dictionary.load(self._lexicon_path)
-
-        if os.path.exists(self._tfidf_path):
-            self.tfidf = TfidfModel().load(self._tfidf_path)
-
-    def save(self):
-        self.lexicon.save(self._lexicon_path)
-        self.tfidf.save(self._tfidf_path)
-
-    def fit(self, documents, labels=None):
-        self.lexicon = Dictionary(documents)
-        self.tfidf = TfidfModel([self.lexicon.doc2bow(doc) for doc in documents], id2word=self.lexicon)
-        self.save()
-        return self
-    
-    def transform(self, documents):
-        docvecs = [ self.tfidf[self.lexicon.doc2bow(document)] for document in documents ]
-        docvecs = [sparse2full(docvec, len(self.lexicon)) for docvec in docvecs ]
-        docvec_mat = sp.csr_matrix(docvecs, dtype=np.float64)
-        return docvec_mat
-
 
     # def transform(self, documents):
     #     def generator():

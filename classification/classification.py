@@ -37,16 +37,20 @@ target = 'bullying_trace'
 if __name__ == '__main__':
     corpus = TweetsCorpusReader(CORPUS.__str__(), DOC_PATTERN, bullying_trace=target)
     # processed_tweets = corpus.process_tweet()
+    # from transformers import TextNormalizer
     # normalize  = TextNormalizer(lemma=True)
-    # normalized_tweets = list(normalize.fit_transform(processed_tweets)) 
-    # X = [' '.join(doc) for doc in normalized_tweets]
+    # normalized_tweets = list(normalize.fit_transform(processed_tweets))
+    # print(len(normalized_tweets)) 
+    # # X = [' '.join(doc) for doc in normalized_tweets]
+    # y = list(corpus.fields(fields=target))
 
     # perform classification with increasing training set size
-    idx = (np.linspace(1, 1.0, 1)*len(corpus.docs())).astype(int)
-    # idx = [i for i in range(0, len(corpus.docs()), 100) ]
+    # idx = (np.linspace(1, 1.0, 1)*len(corpus.docs())).astype(int)
+    idx = [i for i in range(500, len(corpus.docs()), 500) ]
     for i in idx: 
-        loader = CorpusLoader(corpus, 12, label=target, size=i)
+        loader = CorpusLoader(corpus, 6, label=target, size=i)
         for scores in score_models(binary_models, loader):
+            print(scores)
             result_filename = 'TRACE_results'+str(i)+'.json'
             with open(Path.joinpath(RESULTS,result_filename), 'a') as f:
                 f.write(json.dumps(scores) + '\n')

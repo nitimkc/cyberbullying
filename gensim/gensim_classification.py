@@ -17,7 +17,6 @@ import re
 log = logging.getLogger("readability.readability")
 log.setLevel('WARNING')
 
-
 # ROOT = Path('C:\\Users\\niti.mishra\\Documents\\Personal\\cyberbullying\\') # windows
 ROOT = Path('/Users/peaceforlives/Documents/Projects/cyberbullying/')         # mac
 CORPUS = Path.joinpath(ROOT, 'data', 'labelled_tweets', 'ab')
@@ -30,13 +29,10 @@ DOC_PATTERN = r'.*\.json'
 ## binary-classification
 ##########################################################################
 target = 'bullying_trace'
-# target = 'bullying_role'
-# target = 'form_of_bullying'
-# target = 'bullying_post_type'
 if __name__ == '__main__':
 
     from sklearn.pipeline import Pipeline
-    from sklearn.linear_model import LogisticRegression
+    from sklearn.linear_model import LogisticRegressionCV
     from sklearn.naive_bayes import MultinomialNB
     from sklearn.metrics import accuracy_score
     from sklearn.metrics import f1_score
@@ -61,13 +57,17 @@ if __name__ == '__main__':
     
     normal = TextNormalizer()
     norm_docs = list(normal.fit_transform(docs))
-    gensim = GensimTfidfVectorizer()
+    # documents = norm_docs
+    # id2word = gensim.corpora.Dictionary(documents)
+    # taggeddoc = [ TaggedDocument(words, ['d{}'.format(idx)]) for idx, words in enumerate(documents) ]
+    # model = Doc2Vec(taggeddoc, vector_size=5, window=2, min_count=1, workers=4)
+    # docvecs = model.docvecs.vectors_docs
+    gensim = GensimTfidfVectorizer(type='tfidf')
     gensim_docs = gensim.fit_transform(norm_docs)
-    gensim_docs
 
     X_train, X_test, y_train, y_test = tts(gensim_docs, y, test_size=0.2)
 
-    clf = LogisticRegression()
+    clf = LogisticRegressionCV()
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)
     f1_score(y_pred, y_test)

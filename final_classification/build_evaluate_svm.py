@@ -74,21 +74,34 @@ def build_and_evaluateSVM(X, y, n=None, classifier=svm.SVC, outpath=None, verbos
             ('classifier', classifier),
         ])
         
+       
+        # maxdf = [0.85, 0.90, 0.95]
+        # mindf = (4, 3, 2)
+        # nfeat = [12000, 12500, 13000]
+        # ngrams = [(1, 1), (1, 2), (1,3)]
+        # # Cs = [0.001, 0.01, 0.1, 1, 10]
+        # # gammas = [0.001, 0.01, 0.1, 1]   
+        # param_grid = {
+        #     # 'classifier__C': Cs, 'classifier__gamma' : gammas,
+        #     'vectorizer__max_df':maxdf, 'vectorizer__min_df':mindf, 'vectorizer__ngram_range':ngrams, 'vectorizer__max_features':nfeat
+        #     }
+        # grid_search = GridSearchCV(gridsearch_pipe, param_grid, cv=10)
+        # grid_search.fit(X, y)
+        # best_param = grid_search.best_params_
+        # print(best_param)
 
-        Cs = [0.001, 0.01, 0.1, 1, 10]
-        gammas = [0.001, 0.01, 0.1, 1]
-        param_grid = {'classifier__C': Cs, 'classifier__gamma' : gammas}
-        grid_search = GridSearchCV(gridsearch_pipe, param_grid, cv=10)
-        grid_search.fit(X, y)
-        best_param = grid_search.best_params_
+        # vectorizer = TfidfVectorizer(tokenizer=identity, preprocessor=None, lowercase=False, 
+        # max_df=best_param['vectorizer__max_df'], min_df=best_param['vectorizer__min_df'],
+        # ngram_range=best_param['vectorizer__ngram_range'], max_features=best_param['vectorizer__max_features'])
+        # classifier = svm.SVC(kernel='rbf', C=best_param['classifier__C'], gamma=best_param['classifier__gamma'])
         
-        classifier = svm.SVC(kernel='rbf', C=best_param['classifier__C'], gamma=best_param['classifier__gamma'])
-        
+        vectorizer = TfidfVectorizer(tokenizer=identity, preprocessor=None, lowercase=False, ngram_range=(1,2), max_features=12000, 
+                max_df=0.85, min_df=4 )
+        classifier = svm.SVC(kernel='rbf', C=10, gamma=1)
+
         model = Pipeline([
             # ('preprocessor', TextNormalizer_lemmatize()),
-            ('vectorizer', TfidfVectorizer(
-                tokenizer=identity, preprocessor=None, lowercase=False, ngram_range=(1,2))
-                ),
+            ('vectorizer', vectorizer),
             ('classifier', classifier),
         ])
         model.fit(X, y)
@@ -102,7 +115,9 @@ def build_and_evaluateSVM(X, y, n=None, classifier=svm.SVC, outpath=None, verbos
     # Begin evaluation
     if n:
         if verbose: print("splitting test and test set by: "+str(n))
-        X_train, X_test, y_train, y_test = tts(X, y, test_size=n, stratify=y)
+        n_samples = len(y)
+        indicies = np.arange(n_samples)  
+        X_train, X_test, y_train, y_test, idx_train, idx_test = tts(X, y, indicies, test_size=n, stratify=y)
         # X_train, X_test, y_train, y_test = X[:n], X[n:], y[:n], y[n:]
         print(len(X_train), len(X_test))
         from collections import Counter
@@ -146,7 +161,7 @@ def build_and_evaluateSVM(X, y, n=None, classifier=svm.SVC, outpath=None, verbos
 
         print("Model written out to {}".format(outpath))
 
-    return model
+    return model, y_pred, idx_test
 
 
 def show_most_informative_features(model, text=None, n=10):

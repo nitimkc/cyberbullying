@@ -75,10 +75,7 @@ class TweetsCorpusReader(CorpusReader):
                 for (path, enc, fileid) in self.abspaths(fileids, True, True)
             ])
         
-<<<<<<< HEAD
         tweets = [tweet for tweet in tweets]
-
-
 
         if self._bullying_trace=='bullying_trace':
             remove = ['nan','remove']
@@ -121,23 +118,6 @@ class TweetsCorpusReader(CorpusReader):
 
     #     return new_tweets
     #     # return tweets 
-=======
-        # if self._bullying_trace=='bullying_trace':
-        #     new_tweets = [tweet for tweet in tweets if str(tweet[self._bullying_trace]) =='yes']
-        if self._bullying_trace=='bullying_role':
-            new_tweets = [tweet for tweet in tweets if str(tweet[self._bullying_trace]) !='nan']
-        elif self._bullying_trace=='form_of_bullying':
-            new_tweets = [tweet for tweet in tweets if str(tweet[self._bullying_trace]) !='nan']
-        elif self._bullying_trace=='bullying_post_type':
-            new_tweets = [tweet for tweet in tweets if str(tweet[self._bullying_trace]) !='nan']           
-        
-        else:
-            remove = ['nan','remove']
-            new_tweets = [tweet for tweet in tweets if str(tweet[self._bullying_trace]) not in remove]
-
-        return new_tweets
-        # return tweets 
->>>>>>> 78a41882454b4acb17f8ed2e6e4a30676a7ccf73
            
     def sizes(self, fileids=None):
         """

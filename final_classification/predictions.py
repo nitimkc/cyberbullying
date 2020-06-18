@@ -34,6 +34,7 @@ DOC_PATTERN = r'.*\.json'
 # print(len(docs))
 # data_docs = pd.DataFrame(docs)
 # print(data_docs.shape)
+# data_docs.to_pickle("results/full_data.pkl")
 # data_docs.to_csv('results/full_data.csv', encoding='utf-8-sig')
 
 # full_processedtweets = full_corpus.process_tweet()
@@ -95,3 +96,13 @@ DOC_PATTERN = r'.*\.json'
 ####################
 sample_tweets = pd.read_csv('results/sample_tweets.csv', encoding='utf-8-sig')
 data_docs = pd.read_pickle("results/data_docs.pkl")
+
+table = pd.pivot_table(data_docs, index=['bullying_role'], columns=['form_of_bullying'], aggfunc=np.sum)
+data_docs.groupby(['form_of_bullying', 'bullying_role']).size()
+groups = data_docs.groupby(['form_of_bullying', 'bullying_post_type', 'bullying_role']).size()
+groups['cyber']
+
+cyber_only = data_docs.loc[data_docs['form_of_bullying']=='cyber',]
+other = cyber_only.loc[cyber_only['bullying_role']=='other']
+not_other = cyber_only.loc[cyber_only['bullying_role']!='other']
+test = not_other.groupby(['bullying_post_type', 'bullying_role']).apply(lambda df: df.sample(30))

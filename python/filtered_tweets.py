@@ -48,11 +48,12 @@ def filtered_tweets(path_infile, primary, secondary, additional, output_dir):
     # load primary keywords
     primaryfilter_data = filter_keywords(data=data, keywords=primary)
     secondaryfilter_data = filter_keywords(data=primaryfilter_data, keywords=secondary)
-    additionalfilter_data = filter_keywords(data=secondaryfilter_data, keywords=additional, omit=True)
+    # additionalfilter_data = filter_keywords(data=secondaryfilter_data, keywords=additional, omit=True)
 
     # output
     path_outfile = Path.joinpath(output_dir, path_infile.name)
-    additionalfilter_data.to_json( path_outfile, orient='records', lines=True)
+    secondaryfilter_data.to_json( path_outfile, orient='records', lines=True)
+    # additionalfilter_data.to_json( path_outfile, orient='records', lines=True)
 
 
 # filtered_tweets(path_infile, primary, secondary, additional, output_dir)

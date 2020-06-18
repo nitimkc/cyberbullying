@@ -8,8 +8,9 @@ import pandas as pd
 
 PATH = Path('/Users/peaceforlives/Documents/Projects/cyberbullying/data/')
 primary = PATH.joinpath(PATH.parents[0], 'python/primary_keywords.txt')
-secondary = PATH.joinpath(PATH.parents[0], 'python/secondary_keywords.txt')
-additional = PATH.joinpath(PATH.parents[0], 'python/additional_keywords.txt')
+secondary = PATH.joinpath(PATH.parents[0], 'python/corona_keywords.txt')
+# secondary = PATH.joinpath(PATH.parents[0], 'python/secondary_keywords.txt')
+# additional = PATH.joinpath(PATH.parents[0], 'python/additional_keywords.txt')
 
 
 # -------------------------------------------- #
@@ -19,7 +20,8 @@ additional = PATH.joinpath(PATH.parents[0], 'python/additional_keywords.txt')
 # dump results in filtered folder
 
 input_dir = PATH.joinpath(PATH, 'original')
-output_dir = PATH.joinpath(PATH, 'filtered')
+output_dir = PATH.joinpath(PATH, 'corona/filtered')
+# output_dir = PATH.joinpath(PATH, 'filtered')
 
 files_to_process = list( set( os.listdir(input_dir) ) - set( os.listdir(output_dir) ) ) # files already process should not be processed
 # files_to_process = os.listdir(input_dir)
